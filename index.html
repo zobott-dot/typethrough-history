@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TypeThrough History</title>
+    <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Special+Elite&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        /* === COLOR PALETTE === */
+        :root {
+            --parchment: #f4edd3;
+            --parchment-dark: #e8dbb8;
+            --parchment-edge: #d4c49a;
+            --ink-dark: #2c1810;
+            --ink-medium: #4a3728;
+            --ink-light: #6b5744;
+            --ink-faded: #8a7560;
+            --accent-red: #8b2500;
+            --accent-gold: #b8860b;
+            --shadow: rgba(44, 24, 16, 0.15);
+        }
+
+        /* === RESET & BASE === */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #3a2f28;
+            background-image: 
+                radial-gradient(ellipse at 30% 20%, rgba(74, 55, 40, 0.4) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 80%, rgba(74, 55, 40, 0.3) 0%, transparent 60%),
+                linear-gradient(180deg, #3a2f28 0%, #2c2219 100%);
+            padding: 2rem;
+            font-family: 'Crimson Text', Georgia, serif;
+        }
+
+        /* === MAIN DOCUMENT === */
+        .document {
+            position: relative;
+            max-width: 700px;
+            width: 100%;
+            background: var(--parchment);
+            padding: 4rem 3.5rem;
+            box-shadow: 
+                0 2px 8px var(--shadow),
+                0 8px 32px rgba(44, 24, 16, 0.25),
+                inset 0 0 80px rgba(212, 196, 154, 0.3);
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        /* Aged edges effect */
+        .document::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 1px solid var(--parchment-edge);
+            pointer-events: none;
+        }
+
+        .document::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            right: 8px;
+            bottom: 8px;
+            border: 1px solid var(--parchment-edge);
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        /* === DECORATIVE RULE === */
+        .ornament {
+            text-align: center;
+            color: var(--accent-gold);
+            font-size: 1.5rem;
+            letter-spacing: 0.5rem;
+            margin: 1.5rem 0;
+            opacity: 0.6;
+        }
+
+        .ornament.top {
+            margin-top: 0;
+        }
+
+        /* === TYPOGRAPHY === */
+        .title {
+            font-family: 'IM Fell English', Georgia, serif;
+            font-size: 2.8rem;
+            color: var(--ink-dark);
+            text-align: center;
+            line-height: 1.2;
+            letter-spacing: 0.02em;
+            margin-bottom: 0.25rem;
+        }
+
+        .subtitle {
+            font-family: 'Special Elite', 'Courier New', monospace;
+            font-size: 0.95rem;
+            color: var(--ink-light);
+            text-align: center;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+        }
+
+        .description {
+            font-family: 'Crimson Text', Georgia, serif;
+            font-size: 1.2rem;
+            color: var(--ink-medium);
+            text-align: center;
+            line-height: 1.8;
+            font-style: italic;
+            margin-bottom: 1.5rem;
+        }
+
+        .era-list {
+            font-family: 'Crimson Text', Georgia, serif;
+            font-size: 1.05rem;
+            color: var(--ink-light);
+            text-align: center;
+            line-height: 2;
+            margin-bottom: 1.5rem;
+        }
+
+        .era-list .era {
+            display: block;
+        }
+
+        .era-list .era-name {
+            font-family: 'IM Fell English', Georgia, serif;
+            color: var(--ink-medium);
+            font-weight: 600;
+        }
+
+        .era-list .era-years {
+            font-family: 'Special Elite', monospace;
+            font-size: 0.85rem;
+            color: var(--ink-faded);
+            letter-spacing: 0.05em;
+        }
+
+        .coming-soon {
+            font-family: 'Special Elite', 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: var(--ink-faded);
+            text-align: center;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-top: 0.5rem;
+        }
+
+        .version {
+            font-family: 'Special Elite', monospace;
+            font-size: 0.7rem;
+            color: var(--parchment-edge);
+            text-align: center;
+            margin-top: 1rem;
+            letter-spacing: 0.1em;
+        }
+
+        /* === ANIMATION === */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 600px) {
+            .document {
+                padding: 2.5rem 2rem;
+            }
+            .title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="document">
+        <div class="ornament top">❧ ✦ ❧</div>
+        
+        <h1 class="title">TypeThrough History</h1>
+        <p class="subtitle">A Typing Tutor for the Curious Mind</p>
+        
+        <div class="ornament">— ✦ —</div>
+
+        <p class="description">
+            Improve your typing speed and accuracy while journeying through 
+            the defining moments of the early 20th century — one passage at a time.
+        </p>
+
+        <div class="era-list">
+            <span class="era">
+                <span class="era-name">The New Century</span> 
+                <span class="era-years">1900–1913</span>
+            </span>
+            <span class="era">
+                <span class="era-name">The Great War</span> 
+                <span class="era-years">1914–1918</span>
+            </span>
+            <span class="era">
+                <span class="era-name">The Roaring Twenties</span> 
+                <span class="era-years">1919–1929</span>
+            </span>
+            <span class="era">
+                <span class="era-name">The Great Depression</span> 
+                <span class="era-years">1929–1939</span>
+            </span>
+            <span class="era">
+                <span class="era-name">The World at War Again</span> 
+                <span class="era-years">1939–1945</span>
+            </span>
+        </div>
+
+        <div class="ornament">— ✦ —</div>
+
+        <p class="coming-soon">Currently under construction</p>
+        <p class="version">v0.1.0</p>
+    </main>
+</body>
+</html>
