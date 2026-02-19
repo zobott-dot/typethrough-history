@@ -805,10 +805,31 @@
             typingInput.value = '';
         });
 
-        // Handle backspace - we don't allow going back (forward-only typing)
+        // Handle backspace - go back one character and clear its state
         typingInput.addEventListener('keydown', function(e) {
             if (e.key === 'Backspace') {
                 e.preventDefault();
+                if (currentCharIndex > 0 && !isComplete) {
+                    currentCharIndex--;
+                    const chars = passageDisplay.querySelectorAll('.char');
+
+                    // Remove current marker from where we were
+                    if (currentCharIndex + 1 < chars.length) {
+                        chars[currentCharIndex + 1].classList.remove('current');
+                    }
+
+                    // If the character we're going back to was incorrect, reduce error count
+                    if (chars[currentCharIndex].classList.contains('incorrect')) {
+                        errors--;
+                        totalKeystrokes--;
+                    } else if (chars[currentCharIndex].classList.contains('correct')) {
+                        totalKeystrokes--;
+                    }
+
+                    // Clear the state of the character we're going back to
+                    chars[currentCharIndex].classList.remove('correct', 'incorrect');
+                    chars[currentCharIndex].classList.add('current');
+                }
             }
             // Prevent Tab from leaving
             if (e.key === 'Tab') {
