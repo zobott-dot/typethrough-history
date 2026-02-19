@@ -436,6 +436,75 @@
             letter-spacing: 0.1em;
         }
 
+        /* === SOUND CONTROLS === */
+        .sound-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 0.6rem;
+        }
+
+        .sound-btn {
+            background: transparent;
+            border: 1px solid var(--ink-faded);
+            color: var(--parchment-dark);
+            width: 2.2rem;
+            height: 2.2rem;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .sound-btn:hover {
+            border-color: var(--parchment);
+            color: var(--parchment);
+        }
+
+        .sound-btn.active {
+            border-color: var(--accent-gold);
+            color: var(--accent-gold);
+        }
+
+        .sound-btn.muted {
+            border-color: var(--ink-faded);
+            color: var(--ink-faded);
+            opacity: 0.5;
+        }
+
+        .sound-select {
+            font-family: 'Special Elite', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            background: transparent;
+            border: 1px solid var(--ink-faded);
+            color: var(--parchment-dark);
+            padding: 0.35rem 0.6rem;
+            border-radius: 3px;
+            cursor: pointer;
+            appearance: auto;
+            transition: all 0.3s;
+        }
+
+        .sound-select:hover {
+            border-color: var(--parchment);
+            color: var(--parchment);
+        }
+
+        .sound-select:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+        }
+
+        .sound-select option {
+            background: #3a2f28;
+            color: var(--parchment);
+        }
+
         /* === TYPING SCREEN (hidden by default) === */
         .typing-screen {
             display: none;
@@ -481,6 +550,17 @@
     <header class="header">
         <h1>TypeThrough History</h1>
         <div class="tagline">A Typing Tutor for the Curious Mind</div>
+        <div class="sound-controls">
+            <button class="sound-btn active" id="soundToggle" onclick="toggleSound()">
+                <span id="soundIcon">&#9835;</span>
+            </button>
+            <select class="sound-select" id="soundTheme" onchange="changeSoundTheme(this.value)">
+                <option value="typewriter">Typewriter</option>
+                <option value="telegraph">Telegraph</option>
+                <option value="fountain">Fountain Pen</option>
+                <option value="silent">Silent</option>
+            </select>
+        </div>
     </header>
 
     <main class="document">
@@ -587,6 +667,407 @@
     </main>
 
     <script>
+        // ===================================================================
+        // SOUND ENGINE (Web Audio API)
+        // ===================================================================
+        let audioCtx = null;
+        let soundEnabled = true;
+        let currentTheme = 'typewriter';
+
+        function getAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const btn = document.getElementById('soundToggle');
+            const icon = document.getElementById('soundIcon');
+            if (soundEnabled) {
+                btn.classList.remove('muted');
+                btn.classList.add('active');
+                icon.innerHTML = '&#9835;';
+            } else {
+                btn.classList.remove('active');
+                btn.classList.add('muted');
+                icon.innerHTML = '&#9834;';
+            }
+        }
+
+        function changeSoundTheme(theme) {
+            currentTheme = theme;
+            if (theme === 'silent') {
+                soundEnabled = false;
+                const btn = document.getElementById('soundToggle');
+                btn.classList.remove('active');
+                btn.classList.add('muted');
+                document.getElementById('soundIcon').innerHTML = '&#9834;';
+            } else if (!soundEnabled) {
+                soundEnabled = true;
+                const btn = document.getElementById('soundToggle');
+                btn.classList.remove('muted');
+                btn.classList.add('active');
+                document.getElementById('soundIcon').innerHTML = '&#9835;';
+            }
+        }
+
+        // --- Noise generator helper ---
+        function createNoiseBuffer(ctx, duration) {
+            const bufferSize = ctx.sampleRate * duration;
+            const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = Math.random() * 2 - 1;
+            }
+            return buffer;
+        }
+
+        // =====================
+        // TYPEWRITER SOUNDS
+        // =====================
+        function typewriterKey() {
+            const ctx = getAudioContext();
+            const t = ctx.currentTime;
+
+            // Short percussive click using noise
+            const noise = ctx.createBufferSource();
+            noise.buffer = createNoiseBuffer(ctx, 0.035);
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.value = 800 + Math.random() * 400;
+            filter.Q.value = 2;
+            const gain = ctx.createGain();
+            gain.gain.setValueAtTime(0.2, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.03);
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(ctx.destination);
+            noise.start(t);
+            noise.stop(t + 0.035);
+        }
+
+        function typewriterSpace() {
+            const ctx = getAudioContext();
+            const t = ctx.currentTime;
+
+            // Wider, heavier thunk for spacebar
+            const noise = ctx.createBufferSource();
+            noise.buffer = createNoiseBuffer(ctx, 0.06);
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.value = 500;
+            filter.Q.value = 1;
+            const gain = ctx.createGain();
+            gain.gain.setValueAtTime(0.25, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.055);
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(ctx.destination);
+            noise.start(t);
+            noise.stop(t + 0.06);
+        }
+
+        function typewriterBackspace() {
+            const ctx = getAudioContext();
+            const t = ctx.currentTime;
+
+            // Light mechanical click
+            const noise = ctx.createBufferSource();
+            noise.buffer = createNoiseBuffer(ctx, 0.03);
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.value = 1200;
+            filter.Q.value = 2;
+            const gain = ctx.createGain();
+            gain.gain.setValueAtTime(0.12, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.025);
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(ctx.destination);
+            noise.start(t);
+            noise.stop(t + 0.03);
+        }
+
+        function typewriterBell() {
+            const ctx = getAudioContext();
+            const t = ctx.currentTime;
+
+            // Bell ding
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(2200, t);
+            gain.gain.setValueAtTime(0.2, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.8);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(t);
+            osc.stop(t + 0.8);
+
+            // Harmonic
+            const osc2 = ctx.createOscillator();
+            const gain2 = ctx.createGain();
+            osc2.type = 'sine';
+            osc2.frequency.setValueAtTime(3300, t);
+            gain2.gain.setValueAtTime(0.08, t);
+            gain2.gain.exponentialRampToValueAtTime(0.001, t + 0.6);
+            osc2.connect(gain2);
+            gain2.connect(ctx.destination);
+            osc2.start(t);
+            osc2.stop(t + 0.6);
+        }
+
+        function typewriterCarriageReturn() {
+            const ctx = getAudioContext();
+            const t = ctx.currentTime;
+
+            // Sliding whoosh
+            const noise = ctx.createBufferSource();
+            noise.buffer = createNoiseBuffer(ctx, 0.4);
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.setValueAtTime(2000, t);
+            filter.frequency.exponentialRampToValueAtTime(400, t + 0.35);
+            filter.Q.value = 1;
+            const gain = ctx.createGain();
+            gain.gain.setValueAtTime(0.15, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(ctx.destination);
+            noise.start(t);
+            noise.stop(t + 0.4);
+
+            // Mechanical clunk at end
+            setTimeout(function() { typewriterBell(); }, 350);
+        }
+
+        // =====================
+        // TELEGRAPH SOUNDS
+        // =====================
+        function telegraphKey() {
+            const ctx = getAudioContext();
+            const t = ctx.currentTime;
+
+            // Short dit
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.value = 700 + Math.random() * 50;
+            gain.gain.setValueAtTime(0.18, t);
+            gain.gain.setValueAtTime(0.18, t + 0.04);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(t);
+            osc.stop(t + 0.06);
+        }
+
+        function telegraphSpace() {
+            const ctx = getAudioContext();
+            const t = ctx.currentTime;
+
+            // Longer dash
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.value = 700;
+            gain.gain.setValueAtTime(0.16, t);
+            gain.gain.setValueAtTime(0.16, t + 0.1);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(t);
+            osc.stop(t + 0.12);
+        }
+
+        function telegraphError() {
+            const ctx = getAudioContext();
+            const t = ctx.currentTime;
+
+            // Error buzz
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.value = 200;
+            gain.gain.setValueAtTime(0.12, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(t);
+            osc.stop(t + 0.15);
+        }
+
+        function telegraphBackspace() {
+            const ctx = getAudioContext();
+            const t = ctx.currentTime;
+
+            // Quick double dit
+            for (let i = 0; i < 2; i++) {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.value = 500;
+                const offset = i * 0.06;
+                gain.gain.setValueAtTime(0.001, t + offset);
+                gain.gain.setValueAtTime(0.12, t + offset + 0.005);
+                gain.gain.exponentialRampToValueAtTime(0.001, t + offset + 0.04);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(t + offset);
+                osc.stop(t + offset + 0.04);
+            }
+        }
+
+        function telegraphComplete() {
+            const ctx = getAudioContext();
+            const t = ctx.currentTime;
+
+            // End of transmission: dit-dit-dit-dah-dit
+            const pattern = [0.05, 0.05, 0.05, 0.15, 0.05];
+            let offset = 0;
+            pattern.forEach(function(dur) {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.value = 750;
+                gain.gain.setValueAtTime(0.001, t + offset);
+                gain.gain.setValueAtTime(0.18, t + offset + 0.005);
+                gain.gain.setValueAtTime(0.18, t + offset + dur);
+                gain.gain.exponentialRampToValueAtTime(0.001, t + offset + dur + 0.02);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(t + offset);
+                osc.stop(t + offset + dur + 0.02);
+                offset += dur + 0.05;
+            });
+        }
+
+        // =====================
+        // FOUNTAIN PEN SOUNDS
+        // =====================
+        function fountainKey() {
+            const ctx = getAudioContext();
+            const t = ctx.currentTime;
+
+            // Soft wet scratch - very gentle
+            const noise = ctx.createBufferSource();
+            noise.buffer = createNoiseBuffer(ctx, 0.08);
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.value = 1500 + Math.random() * 800;
+            filter.Q.value = 0.3;
+            const gain = ctx.createGain();
+            const vol = 0.025 + Math.random() * 0.015;
+            gain.gain.setValueAtTime(0.001, t);
+            gain.gain.linearRampToValueAtTime(vol, t + 0.01);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.06 + Math.random() * 0.02);
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(ctx.destination);
+            noise.start(t);
+            noise.stop(t + 0.08);
+        }
+
+        function fountainSpace() {
+            const ctx = getAudioContext();
+            const t = ctx.currentTime;
+
+            // Pen lift - tiny quiet breath
+            const noise = ctx.createBufferSource();
+            noise.buffer = createNoiseBuffer(ctx, 0.12);
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.value = 2000;
+            filter.Q.value = 0.2;
+            const gain = ctx.createGain();
+            gain.gain.setValueAtTime(0.001, t);
+            gain.gain.linearRampToValueAtTime(0.02, t + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(ctx.destination);
+            noise.start(t);
+            noise.stop(t + 0.12);
+        }
+
+        function fountainBackspace() {
+            const ctx = getAudioContext();
+            const t = ctx.currentTime;
+
+            // Very light paper brush
+            const noise = ctx.createBufferSource();
+            noise.buffer = createNoiseBuffer(ctx, 0.06);
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.value = 2500;
+            filter.Q.value = 0.3;
+            const gain = ctx.createGain();
+            gain.gain.setValueAtTime(0.02, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(ctx.destination);
+            noise.start(t);
+            noise.stop(t + 0.06);
+        }
+
+        function fountainComplete() {
+            const ctx = getAudioContext();
+            const t = ctx.currentTime;
+
+            // Gentle page turn - long soft swoosh
+            const noise = ctx.createBufferSource();
+            noise.buffer = createNoiseBuffer(ctx, 0.6);
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.setValueAtTime(1000, t);
+            filter.frequency.exponentialRampToValueAtTime(5000, t + 0.2);
+            filter.frequency.exponentialRampToValueAtTime(1500, t + 0.5);
+            filter.Q.value = 0.3;
+            const gain = ctx.createGain();
+            gain.gain.setValueAtTime(0.001, t);
+            gain.gain.linearRampToValueAtTime(0.08, t + 0.15);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.55);
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(ctx.destination);
+            noise.start(t);
+            noise.stop(t + 0.6);
+        }
+
+        // =====================
+        // SOUND DISPATCHER
+        // =====================
+        function playSound(type) {
+            if (!soundEnabled) return;
+            try {
+                if (currentTheme === 'typewriter') {
+                    if (type === 'key') typewriterKey();
+                    else if (type === 'space') typewriterSpace();
+                    else if (type === 'backspace') typewriterBackspace();
+                    else if (type === 'complete') typewriterCarriageReturn();
+                } else if (currentTheme === 'telegraph') {
+                    if (type === 'key') telegraphKey();
+                    else if (type === 'space') telegraphSpace();
+                    else if (type === 'backspace') telegraphBackspace();
+                    else if (type === 'complete') telegraphComplete();
+                } else if (currentTheme === 'fountain') {
+                    if (type === 'key') fountainKey();
+                    else if (type === 'space') fountainSpace();
+                    else if (type === 'backspace') fountainBackspace();
+                    else if (type === 'complete') fountainComplete();
+                }
+            } catch(e) {
+                // Silently fail if audio context has issues
+            }
+        }
+
         // ===================================================================
         // PASSAGES - Early 20th Century History
         // ===================================================================
@@ -822,6 +1303,7 @@
                     chars[currentCharIndex].classList.add('incorrect');
                     errors++;
                 }
+                playSound(lastTyped === ' ' ? 'space' : 'key');
 
                 currentCharIndex++;
 
@@ -845,6 +1327,7 @@
             if (e.key === 'Backspace') {
                 e.preventDefault();
                 if (currentCharIndex > 0 && !isComplete) {
+                    playSound('backspace');
                     currentCharIndex--;
                     const chars = passageDisplay.querySelectorAll('.char');
 
@@ -900,6 +1383,7 @@
         function completePassage() {
             isComplete = true;
             if (statsInterval) clearInterval(statsInterval);
+            playSound('complete');
 
             const passage = passages[currentPassageIndex];
             const wpm = calculateWPM();
