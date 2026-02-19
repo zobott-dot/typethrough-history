@@ -1,0 +1,542 @@
+/* ===================================================================
+   TypeThrough History — Styles
+   A vintage/aged paper aesthetic for a historical typing tutor
+   =================================================================== */
+
+/* === COLOR PALETTE === */
+:root {
+    --parchment: #f4edd3;
+    --parchment-dark: #e8dbb8;
+    --parchment-edge: #d4c49a;
+    --parchment-light: #faf6e9;
+    --ink-dark: #2c1810;
+    --ink-medium: #4a3728;
+    --ink-light: #6b5744;
+    --ink-faded: #8a7560;
+    --accent-red: #8b2500;
+    --accent-red-soft: #a0452a;
+    --accent-gold: #b8860b;
+    --accent-gold-soft: #d4a843;
+    --correct-green: #2d5a1e;
+    --correct-bg: rgba(45, 90, 30, 0.1);
+    --error-red: #8b2500;
+    --error-bg: rgba(139, 37, 0, 0.12);
+    --shadow: rgba(44, 24, 16, 0.15);
+}
+
+/* === RESET & BASE === */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #3a2f28;
+    background-image:
+        radial-gradient(ellipse at 30% 20%, rgba(74, 55, 40, 0.4) 0%, transparent 60%),
+        radial-gradient(ellipse at 70% 80%, rgba(74, 55, 40, 0.3) 0%, transparent 60%),
+        linear-gradient(180deg, #3a2f28 0%, #2c2219 100%);
+    padding: 1.5rem;
+    font-family: 'Crimson Text', Georgia, serif;
+    color: var(--ink-dark);
+}
+
+/* === HEADER === */
+.header {
+    text-align: center;
+    margin-bottom: 1.25rem;
+    animation: fadeIn 0.8s ease-out;
+}
+
+.header h1 {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 2.6rem;
+    color: var(--parchment);
+    letter-spacing: 0.02em;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.header .tagline {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.9rem;
+    color: var(--ink-faded);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 0.25rem;
+}
+
+/* === MAIN DOCUMENT === */
+.document {
+    position: relative;
+    max-width: 960px;
+    width: 100%;
+    background: var(--parchment);
+    padding: 3rem 4rem;
+    box-shadow:
+        0 2px 8px var(--shadow),
+        0 8px 32px rgba(44, 24, 16, 0.3),
+        inset 0 0 80px rgba(212, 196, 154, 0.3);
+    animation: fadeIn 1s ease-out 0.2s both;
+}
+
+.document::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border: 1px solid var(--parchment-edge);
+    pointer-events: none;
+}
+
+.document::after {
+    content: '';
+    position: absolute;
+    top: 8px; left: 8px; right: 8px; bottom: 8px;
+    border: 1px solid var(--parchment-edge);
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+/* === PASSAGE INFO BAR === */
+.passage-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--parchment-edge);
+}
+
+.passage-era {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.95rem;
+    color: var(--accent-gold);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.passage-count {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.9rem;
+    color: var(--ink-faded);
+    letter-spacing: 0.05em;
+}
+
+/* === PASSAGE DISPLAY === */
+.passage-title {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 1.6rem;
+    color: var(--ink-dark);
+    margin-bottom: 1.25rem;
+    line-height: 1.3;
+}
+
+.passage-display {
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 1.6rem;
+    line-height: 2.1;
+    color: var(--ink-light);
+    margin-bottom: 1.75rem;
+    min-height: 140px;
+    position: relative;
+    user-select: none;
+}
+
+.passage-display .char {
+    position: relative;
+    transition: color 0.05s;
+    letter-spacing: 0.01em;
+}
+
+.passage-display .char.correct {
+    color: var(--correct-green);
+}
+
+.passage-display .char.incorrect {
+    color: var(--error-red);
+    background-color: var(--error-bg);
+    border-radius: 2px;
+}
+
+.passage-display .char.current {
+    border-bottom: 2px solid var(--accent-gold);
+}
+
+.passage-display .char.current::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--accent-gold);
+    animation: cursorPulse 1s ease-in-out infinite;
+}
+
+/* === HIDDEN INPUT === */
+.typing-input {
+    position: absolute;
+    left: -9999px;
+    opacity: 0;
+}
+
+/* === CLICK PROMPT === */
+.click-prompt {
+    text-align: center;
+    font-family: 'Special Elite', monospace;
+    font-size: 1rem;
+    color: var(--ink-faded);
+    padding: 1rem;
+    border: 1px dashed var(--parchment-edge);
+    margin-bottom: 1.75rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    letter-spacing: 0.05em;
+}
+
+.click-prompt:hover {
+    border-color: var(--accent-gold);
+    color: var(--ink-medium);
+}
+
+.click-prompt.active {
+    border-color: var(--correct-green);
+    color: var(--correct-green);
+    border-style: solid;
+}
+
+/* === LIVE STATS === */
+.live-stats {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    padding: 0.75rem 0;
+    border-top: 1px solid var(--parchment-edge);
+    margin-bottom: 0;
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat-value {
+    font-family: 'Special Elite', monospace;
+    font-size: 1.8rem;
+    color: var(--ink-dark);
+    display: block;
+    line-height: 1;
+}
+
+.stat-label {
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 0.85rem;
+    color: var(--ink-faded);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 0.3rem;
+}
+
+/* === RESULTS SCREEN === */
+.results {
+    display: none;
+    text-align: center;
+    padding: 1rem 0;
+}
+
+.results.visible {
+    display: block;
+    animation: fadeIn 0.6s ease-out;
+}
+
+.results-title {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 1.8rem;
+    color: var(--ink-dark);
+    margin-bottom: 0.25rem;
+}
+
+.results-ornament {
+    color: var(--accent-gold);
+    font-size: 1rem;
+    letter-spacing: 0.5rem;
+    opacity: 0.6;
+    margin-bottom: 1.25rem;
+}
+
+.results-stats {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.result-stat {
+    text-align: center;
+}
+
+.result-stat-value {
+    font-family: 'Special Elite', monospace;
+    font-size: 2.8rem;
+    color: var(--ink-dark);
+    display: block;
+    line-height: 1;
+}
+
+.result-stat-label {
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 0.9rem;
+    color: var(--ink-faded);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 0.4rem;
+    display: block;
+}
+
+/* === FOOTNOTE === */
+.footnote {
+    background: var(--parchment-light);
+    border-left: 3px solid var(--accent-gold);
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 1.1rem;
+    color: var(--ink-medium);
+    font-style: italic;
+    line-height: 1.7;
+    text-align: left;
+}
+
+.footnote-label {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.8rem;
+    color: var(--accent-gold);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-style: normal;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+/* === BUTTONS === */
+.btn {
+    font-family: 'Special Elite', monospace;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.85rem 2.5rem;
+    border: 1px solid var(--ink-light);
+    background: transparent;
+    color: var(--ink-medium);
+    cursor: pointer;
+    transition: all 0.3s;
+    margin: 0 0.35rem;
+}
+
+.btn:hover {
+    background: var(--ink-dark);
+    color: var(--parchment);
+    border-color: var(--ink-dark);
+}
+
+.btn-primary {
+    background: var(--ink-dark);
+    color: var(--parchment);
+}
+
+.btn-primary:hover {
+    background: var(--ink-medium);
+    border-color: var(--ink-medium);
+}
+
+.button-row {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+/* === START SCREEN === */
+.start-screen {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.start-screen .ornament {
+    color: var(--accent-gold);
+    font-size: 1.5rem;
+    letter-spacing: 0.5rem;
+    opacity: 0.6;
+    margin-bottom: 1rem;
+}
+
+.start-title {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 2.8rem;
+    color: var(--ink-dark);
+    margin-bottom: 0.25rem;
+    line-height: 1.2;
+}
+
+.start-subtitle {
+    font-family: 'Special Elite', monospace;
+    font-size: 1rem;
+    color: var(--ink-light);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+}
+
+.start-description {
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 1.3rem;
+    color: var(--ink-medium);
+    font-style: italic;
+    line-height: 1.8;
+    max-width: 580px;
+    margin: 0 auto 1.75rem;
+}
+
+.start-era-list {
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 1.15rem;
+    color: var(--ink-light);
+    line-height: 2.1;
+    margin-bottom: 1.75rem;
+}
+
+.start-era-list .era {
+    display: block;
+}
+
+.start-era-list .era-name {
+    font-family: 'IM Fell English', Georgia, serif;
+    color: var(--ink-medium);
+}
+
+.start-era-list .era-years {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.8rem;
+    color: var(--ink-faded);
+    letter-spacing: 0.05em;
+}
+
+.version {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.7rem;
+    color: var(--parchment-edge);
+    text-align: center;
+    margin-top: 1rem;
+    letter-spacing: 0.1em;
+}
+
+/* === SOUND CONTROLS === */
+.sound-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.6rem;
+}
+
+.sound-btn {
+    background: transparent;
+    border: 1px solid var(--ink-faded);
+    color: var(--parchment-dark);
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+.sound-btn:hover {
+    border-color: var(--parchment);
+    color: var(--parchment);
+}
+
+.sound-btn.active {
+    border-color: var(--accent-gold);
+    color: var(--accent-gold);
+}
+
+.sound-btn.muted {
+    border-color: var(--ink-faded);
+    color: var(--ink-faded);
+    opacity: 0.5;
+}
+
+.sound-select {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    background: transparent;
+    border: 1px solid var(--ink-faded);
+    color: var(--parchment-dark);
+    padding: 0.35rem 0.6rem;
+    border-radius: 3px;
+    cursor: pointer;
+    appearance: auto;
+    transition: all 0.3s;
+}
+
+.sound-select:hover {
+    border-color: var(--parchment);
+    color: var(--parchment);
+}
+
+.sound-select:focus {
+    outline: none;
+    border-color: var(--accent-gold);
+}
+
+.sound-select option {
+    background: #3a2f28;
+    color: var(--parchment);
+}
+
+/* === TYPING SCREEN (hidden by default) === */
+.typing-screen {
+    display: none;
+}
+
+.typing-screen.visible {
+    display: block;
+}
+
+/* === ANIMATIONS === */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes cursorPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 600px) {
+    .document {
+        padding: 1.75rem 1.5rem;
+    }
+    .passage-display {
+        font-size: 1.15rem;
+    }
+    .start-title {
+        font-size: 1.7rem;
+    }
+    .results-stats {
+        gap: 1.5rem;
+    }
+    .header h1 {
+        font-size: 1.5rem;
+    }
+}
