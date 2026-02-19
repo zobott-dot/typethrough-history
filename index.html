@@ -11,12 +11,19 @@
             --parchment: #f4edd3;
             --parchment-dark: #e8dbb8;
             --parchment-edge: #d4c49a;
+            --parchment-light: #faf6e9;
             --ink-dark: #2c1810;
             --ink-medium: #4a3728;
             --ink-light: #6b5744;
             --ink-faded: #8a7560;
             --accent-red: #8b2500;
+            --accent-red-soft: #a0452a;
             --accent-gold: #b8860b;
+            --accent-gold-soft: #d4a843;
+            --correct-green: #2d5a1e;
+            --correct-bg: rgba(45, 90, 30, 0.1);
+            --error-red: #8b2500;
+            --error-bg: rgba(139, 37, 0, 0.12);
             --shadow: rgba(44, 24, 16, 0.15);
         }
 
@@ -30,39 +37,60 @@
         body {
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
             background-color: #3a2f28;
-            background-image: 
+            background-image:
                 radial-gradient(ellipse at 30% 20%, rgba(74, 55, 40, 0.4) 0%, transparent 60%),
                 radial-gradient(ellipse at 70% 80%, rgba(74, 55, 40, 0.3) 0%, transparent 60%),
                 linear-gradient(180deg, #3a2f28 0%, #2c2219 100%);
-            padding: 2rem;
+            padding: 1.5rem;
             font-family: 'Crimson Text', Georgia, serif;
+            color: var(--ink-dark);
+        }
+
+        /* === HEADER === */
+        .header {
+            text-align: center;
+            margin-bottom: 1.25rem;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .header h1 {
+            font-family: 'IM Fell English', Georgia, serif;
+            font-size: 2rem;
+            color: var(--parchment);
+            letter-spacing: 0.02em;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .tagline {
+            font-family: 'Special Elite', monospace;
+            font-size: 0.75rem;
+            color: var(--ink-faded);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-top: 0.25rem;
         }
 
         /* === MAIN DOCUMENT === */
         .document {
             position: relative;
-            max-width: 700px;
+            max-width: 760px;
             width: 100%;
             background: var(--parchment);
-            padding: 4rem 3.5rem;
-            box-shadow: 
+            padding: 2.5rem 3rem;
+            box-shadow:
                 0 2px 8px var(--shadow),
-                0 8px 32px rgba(44, 24, 16, 0.25),
+                0 8px 32px rgba(44, 24, 16, 0.3),
                 inset 0 0 80px rgba(212, 196, 154, 0.3);
-            animation: fadeIn 1.5s ease-out;
+            animation: fadeIn 1s ease-out 0.2s both;
         }
 
-        /* Aged edges effect */
         .document::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             border: 1px solid var(--parchment-edge);
             pointer-events: none;
         }
@@ -70,94 +98,333 @@
         .document::after {
             content: '';
             position: absolute;
-            top: 8px;
-            left: 8px;
-            right: 8px;
-            bottom: 8px;
+            top: 8px; left: 8px; right: 8px; bottom: 8px;
             border: 1px solid var(--parchment-edge);
-            opacity: 0.5;
+            opacity: 0.4;
             pointer-events: none;
         }
 
-        /* === DECORATIVE RULE === */
-        .ornament {
-            text-align: center;
-            color: var(--accent-gold);
-            font-size: 1.5rem;
-            letter-spacing: 0.5rem;
-            margin: 1.5rem 0;
-            opacity: 0.6;
+        /* === PASSAGE INFO BAR === */
+        .passage-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--parchment-edge);
         }
 
-        .ornament.top {
-            margin-top: 0;
-        }
-
-        /* === TYPOGRAPHY === */
-        .title {
-            font-family: 'IM Fell English', Georgia, serif;
-            font-size: 2.8rem;
-            color: var(--ink-dark);
-            text-align: center;
-            line-height: 1.2;
-            letter-spacing: 0.02em;
-            margin-bottom: 0.25rem;
-        }
-
-        .subtitle {
-            font-family: 'Special Elite', 'Courier New', monospace;
-            font-size: 0.95rem;
-            color: var(--ink-light);
-            text-align: center;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            margin-bottom: 1.5rem;
-        }
-
-        .description {
-            font-family: 'Crimson Text', Georgia, serif;
-            font-size: 1.2rem;
-            color: var(--ink-medium);
-            text-align: center;
-            line-height: 1.8;
-            font-style: italic;
-            margin-bottom: 1.5rem;
-        }
-
-        .era-list {
-            font-family: 'Crimson Text', Georgia, serif;
-            font-size: 1.05rem;
-            color: var(--ink-light);
-            text-align: center;
-            line-height: 2;
-            margin-bottom: 1.5rem;
-        }
-
-        .era-list .era {
-            display: block;
-        }
-
-        .era-list .era-name {
-            font-family: 'IM Fell English', Georgia, serif;
-            color: var(--ink-medium);
-            font-weight: 600;
-        }
-
-        .era-list .era-years {
+        .passage-era {
             font-family: 'Special Elite', monospace;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
+            color: var(--accent-gold);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .passage-count {
+            font-family: 'Special Elite', monospace;
+            font-size: 0.75rem;
             color: var(--ink-faded);
             letter-spacing: 0.05em;
         }
 
-        .coming-soon {
-            font-family: 'Special Elite', 'Courier New', monospace;
+        /* === PASSAGE DISPLAY === */
+        .passage-title {
+            font-family: 'IM Fell English', Georgia, serif;
+            font-size: 1.3rem;
+            color: var(--ink-dark);
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        .passage-display {
+            font-family: 'Crimson Text', Georgia, serif;
+            font-size: 1.35rem;
+            line-height: 2;
+            color: var(--ink-light);
+            margin-bottom: 1.5rem;
+            min-height: 120px;
+            position: relative;
+            user-select: none;
+        }
+
+        .passage-display .char {
+            position: relative;
+            transition: color 0.05s;
+            letter-spacing: 0.01em;
+        }
+
+        .passage-display .char.correct {
+            color: var(--correct-green);
+        }
+
+        .passage-display .char.incorrect {
+            color: var(--error-red);
+            background-color: var(--error-bg);
+            border-radius: 2px;
+        }
+
+        .passage-display .char.current {
+            border-bottom: 2px solid var(--accent-gold);
+        }
+
+        .passage-display .char.current::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent-gold);
+            animation: cursorPulse 1s ease-in-out infinite;
+        }
+
+        /* === HIDDEN INPUT === */
+        .typing-input {
+            position: absolute;
+            left: -9999px;
+            opacity: 0;
+        }
+
+        /* === CLICK PROMPT === */
+        .click-prompt {
+            text-align: center;
+            font-family: 'Special Elite', monospace;
             font-size: 0.85rem;
             color: var(--ink-faded);
+            padding: 0.75rem;
+            border: 1px dashed var(--parchment-edge);
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 0.05em;
+        }
+
+        .click-prompt:hover {
+            border-color: var(--accent-gold);
+            color: var(--ink-medium);
+        }
+
+        .click-prompt.active {
+            border-color: var(--correct-green);
+            color: var(--correct-green);
+            border-style: solid;
+        }
+
+        /* === LIVE STATS === */
+        .live-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2.5rem;
+            padding: 0.75rem 0;
+            border-top: 1px solid var(--parchment-edge);
+            margin-bottom: 0;
+        }
+
+        .stat {
             text-align: center;
-            letter-spacing: 0.2em;
+        }
+
+        .stat-value {
+            font-family: 'Special Elite', monospace;
+            font-size: 1.4rem;
+            color: var(--ink-dark);
+            display: block;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-family: 'Crimson Text', Georgia, serif;
+            font-size: 0.75rem;
+            color: var(--ink-faded);
             text-transform: uppercase;
-            margin-top: 0.5rem;
+            letter-spacing: 0.1em;
+            margin-top: 0.25rem;
+        }
+
+        /* === RESULTS SCREEN === */
+        .results {
+            display: none;
+            text-align: center;
+            padding: 1rem 0;
+        }
+
+        .results.visible {
+            display: block;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .results-title {
+            font-family: 'IM Fell English', Georgia, serif;
+            font-size: 1.5rem;
+            color: var(--ink-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .results-ornament {
+            color: var(--accent-gold);
+            font-size: 1rem;
+            letter-spacing: 0.5rem;
+            opacity: 0.6;
+            margin-bottom: 1.25rem;
+        }
+
+        .results-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .result-stat {
+            text-align: center;
+        }
+
+        .result-stat-value {
+            font-family: 'Special Elite', monospace;
+            font-size: 2.2rem;
+            color: var(--ink-dark);
+            display: block;
+            line-height: 1;
+        }
+
+        .result-stat-label {
+            font-family: 'Crimson Text', Georgia, serif;
+            font-size: 0.8rem;
+            color: var(--ink-faded);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 0.35rem;
+            display: block;
+        }
+
+        /* === FOOTNOTE === */
+        .footnote {
+            background: var(--parchment-light);
+            border-left: 3px solid var(--accent-gold);
+            padding: 1rem 1.25rem;
+            margin: 1.25rem 0;
+            font-family: 'Crimson Text', Georgia, serif;
+            font-size: 1rem;
+            color: var(--ink-medium);
+            font-style: italic;
+            line-height: 1.7;
+            text-align: left;
+        }
+
+        .footnote-label {
+            font-family: 'Special Elite', monospace;
+            font-size: 0.7rem;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-style: normal;
+            display: block;
+            margin-bottom: 0.4rem;
+        }
+
+        /* === BUTTONS === */
+        .btn {
+            font-family: 'Special Elite', monospace;
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 0.7rem 2rem;
+            border: 1px solid var(--ink-light);
+            background: transparent;
+            color: var(--ink-medium);
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 0 0.35rem;
+        }
+
+        .btn:hover {
+            background: var(--ink-dark);
+            color: var(--parchment);
+            border-color: var(--ink-dark);
+        }
+
+        .btn-primary {
+            background: var(--ink-dark);
+            color: var(--parchment);
+        }
+
+        .btn-primary:hover {
+            background: var(--ink-medium);
+            border-color: var(--ink-medium);
+        }
+
+        .button-row {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        /* === START SCREEN === */
+        .start-screen {
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .start-screen .ornament {
+            color: var(--accent-gold);
+            font-size: 1.5rem;
+            letter-spacing: 0.5rem;
+            opacity: 0.6;
+            margin-bottom: 1rem;
+        }
+
+        .start-title {
+            font-family: 'IM Fell English', Georgia, serif;
+            font-size: 2.2rem;
+            color: var(--ink-dark);
+            margin-bottom: 0.25rem;
+            line-height: 1.2;
+        }
+
+        .start-subtitle {
+            font-family: 'Special Elite', monospace;
+            font-size: 0.85rem;
+            color: var(--ink-light);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+        }
+
+        .start-description {
+            font-family: 'Crimson Text', Georgia, serif;
+            font-size: 1.15rem;
+            color: var(--ink-medium);
+            font-style: italic;
+            line-height: 1.8;
+            max-width: 520px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .start-era-list {
+            font-family: 'Crimson Text', Georgia, serif;
+            font-size: 1rem;
+            color: var(--ink-light);
+            line-height: 2;
+            margin-bottom: 1.5rem;
+        }
+
+        .start-era-list .era {
+            display: block;
+        }
+
+        .start-era-list .era-name {
+            font-family: 'IM Fell English', Georgia, serif;
+            color: var(--ink-medium);
+        }
+
+        .start-era-list .era-years {
+            font-family: 'Special Elite', monospace;
+            font-size: 0.8rem;
+            color: var(--ink-faded);
+            letter-spacing: 0.05em;
         }
 
         .version {
@@ -169,70 +436,433 @@
             letter-spacing: 0.1em;
         }
 
-        /* === ANIMATION === */
+        /* === TYPING SCREEN (hidden by default) === */
+        .typing-screen {
+            display: none;
+        }
+
+        .typing-screen.visible {
+            display: block;
+        }
+
+        /* === ANIMATIONS === */
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes cursorPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
         }
 
         /* === RESPONSIVE === */
         @media (max-width: 600px) {
             .document {
-                padding: 2.5rem 2rem;
+                padding: 1.75rem 1.5rem;
             }
-            .title {
-                font-size: 2rem;
+            .passage-display {
+                font-size: 1.15rem;
+            }
+            .start-title {
+                font-size: 1.7rem;
+            }
+            .results-stats {
+                gap: 1.5rem;
+            }
+            .header h1 {
+                font-size: 1.5rem;
             }
         }
     </style>
 </head>
 <body>
+
+    <header class="header">
+        <h1>TypeThrough History</h1>
+        <div class="tagline">A Typing Tutor for the Curious Mind</div>
+    </header>
+
     <main class="document">
-        <div class="ornament top">❧ ✦ ❧</div>
-        
-        <h1 class="title">TypeThrough History</h1>
-        <p class="subtitle">A Typing Tutor for the Curious Mind</p>
-        
-        <div class="ornament">— ✦ —</div>
 
-        <p class="description">
-            Improve your typing speed and accuracy while journeying through 
-            the defining moments of the early 20th century — one passage at a time.
-        </p>
-
-        <div class="era-list">
-            <span class="era">
-                <span class="era-name">The New Century</span> 
-                <span class="era-years">1900–1913</span>
-            </span>
-            <span class="era">
-                <span class="era-name">The Great War</span> 
-                <span class="era-years">1914–1918</span>
-            </span>
-            <span class="era">
-                <span class="era-name">The Roaring Twenties</span> 
-                <span class="era-years">1919–1929</span>
-            </span>
-            <span class="era">
-                <span class="era-name">The Great Depression</span> 
-                <span class="era-years">1929–1939</span>
-            </span>
-            <span class="era">
-                <span class="era-name">The World at War Again</span> 
-                <span class="era-years">1939–1945</span>
-            </span>
+        <!-- ===== START SCREEN ===== -->
+        <div class="start-screen" id="startScreen">
+            <div class="ornament">&#10087; &#10022; &#10087;</div>
+            <h2 class="start-title">Begin Your Journey</h2>
+            <p class="start-subtitle">Through the Early 20th Century</p>
+            <p class="start-description">
+                Type your way through the defining moments of a turbulent age &mdash;
+                from the dawn of flight to the atomic era. Each passage teaches
+                as you type.
+            </p>
+            <div class="start-era-list">
+                <span class="era">
+                    <span class="era-name">The New Century</span>
+                    <span class="era-years">1900&ndash;1913</span>
+                </span>
+                <span class="era">
+                    <span class="era-name">The Great War</span>
+                    <span class="era-years">1914&ndash;1918</span>
+                </span>
+                <span class="era">
+                    <span class="era-name">The Roaring Twenties</span>
+                    <span class="era-years">1919&ndash;1929</span>
+                </span>
+                <span class="era">
+                    <span class="era-name">The Great Depression</span>
+                    <span class="era-years">1929&ndash;1939</span>
+                </span>
+                <span class="era">
+                    <span class="era-name">The World at War Again</span>
+                    <span class="era-years">1939&ndash;1945</span>
+                </span>
+            </div>
+            <button class="btn btn-primary" onclick="startTyping()">Begin Typing</button>
+            <div class="version">v0.2.0</div>
         </div>
 
-        <div class="ornament">— ✦ —</div>
+        <!-- ===== TYPING SCREEN ===== -->
+        <div class="typing-screen" id="typingScreen">
 
-        <p class="coming-soon">Currently under construction</p>
-        <p class="version">v0.1.0</p>
+            <div class="passage-info">
+                <span class="passage-era" id="passageEra">The New Century &middot; 1900&ndash;1913</span>
+                <span class="passage-count" id="passageCount">Passage 1 of 8</span>
+            </div>
+
+            <h3 class="passage-title" id="passageTitle">The Wright Brothers at Kitty Hawk</h3>
+
+            <div class="passage-display" id="passageDisplay"></div>
+
+            <div class="click-prompt" id="clickPrompt" onclick="activateTyping()">
+                Click here or press any key to begin typing...
+            </div>
+
+            <input type="text" class="typing-input" id="typingInput"
+                   autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+
+            <div class="live-stats" id="liveStats">
+                <div class="stat">
+                    <span class="stat-value" id="liveWpm">0</span>
+                    <span class="stat-label">WPM</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value" id="liveAccuracy">100%</span>
+                    <span class="stat-label">Accuracy</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value" id="liveProgress">0%</span>
+                    <span class="stat-label">Progress</span>
+                </div>
+            </div>
+
+            <!-- Results (shown after completing a passage) -->
+            <div class="results" id="results">
+                <h3 class="results-title">Passage Complete</h3>
+                <div class="results-ornament">&mdash; &#10022; &mdash;</div>
+                <div class="results-stats">
+                    <div class="result-stat">
+                        <span class="result-stat-value" id="finalWpm">0</span>
+                        <span class="result-stat-label">Words per Minute</span>
+                    </div>
+                    <div class="result-stat">
+                        <span class="result-stat-value" id="finalAccuracy">0%</span>
+                        <span class="result-stat-label">Accuracy</span>
+                    </div>
+                    <div class="result-stat">
+                        <span class="result-stat-value" id="finalErrors">0</span>
+                        <span class="result-stat-label">Errors</span>
+                    </div>
+                </div>
+                <div class="footnote" id="footnote">
+                    <span class="footnote-label">Historical Footnote</span>
+                    <span id="footnoteText"></span>
+                </div>
+                <div class="button-row">
+                    <button class="btn" onclick="retryPassage()">Try Again</button>
+                    <button class="btn btn-primary" id="nextBtn" onclick="nextPassage()">Next Passage</button>
+                </div>
+            </div>
+
+        </div>
     </main>
+
+    <script>
+        // ===================================================================
+        // PASSAGES - Early 20th Century History
+        // ===================================================================
+        const passages = [
+            {
+                era: "The New Century \u00b7 1900\u20131913",
+                title: "The Wright Brothers at Kitty Hawk",
+                text: "On December 17, 1903, Orville Wright climbed aboard a fragile craft of wood, wire, and muslin on the windswept dunes of Kitty Hawk, North Carolina. The first flight lasted just 12 seconds and covered 120 feet. By the end of that day, Wilbur had flown 852 feet in 59 seconds. The age of powered flight had begun.",
+                footnote: "The Wright Flyer cost less than $1,000 to build. Meanwhile, the U.S. government had spent $50,000 funding Samuel Langley's failed Aerodrome project. Sometimes the garage inventors win."
+            },
+            {
+                era: "The New Century \u00b7 1900\u20131913",
+                title: "The Triangle Shirtwaist Fire",
+                text: "On March 25, 1911, a fire broke out on the 8th floor of the Triangle Shirtwaist Factory in New York City. The doors had been locked to prevent workers from taking breaks. 146 garment workers, mostly young immigrant women, perished that day. The tragedy led to sweeping reforms in workplace safety laws across the nation.",
+                footnote: "Many victims were as young as 14. The factory owners were acquitted of manslaughter charges but later lost a civil suit, paying $75 per deceased victim. The fire galvanized the American labor movement and led directly to the creation of the Factory Investigating Commission."
+            },
+            {
+                era: "The Great War \u00b7 1914\u20131918",
+                title: "The Christmas Truce of 1914",
+                text: "On Christmas Eve, 1914, along the Western Front, something remarkable happened. German soldiers began placing candles on trees and singing carols. British troops responded in kind. By Christmas morning, soldiers from both sides crossed into no man's land to exchange gifts, share food, and even play football. The war would rage for 4 more years.",
+                footnote: "The truce was not universal but occurred at multiple points along the front. High command on both sides was furious. Troops were rotated to prevent fraternization from happening again. In some sectors, the informal peace lasted until New Year's Day, 1915."
+            },
+            {
+                era: "The Great War \u00b7 1914\u20131918",
+                title: "The Influenza Pandemic of 1918",
+                text: "In the spring of 1918, a deadly strain of influenza began spreading across the globe. It struck with terrifying speed: a person could feel fine at breakfast and be dead by evening. Over 2 years, the pandemic killed an estimated 50 million people worldwide. More American soldiers died of influenza than were killed in combat during the Great War.",
+                footnote: "The pandemic was misleadingly called the 'Spanish Flu' because wartime censorship suppressed news of the outbreak in combatant nations. Spain, being neutral, reported freely on the disease, creating the false impression that it originated there. Its true origin remains debated."
+            },
+            {
+                era: "The Roaring Twenties \u00b7 1919\u20131929",
+                title: "The Birth of Commercial Radio",
+                text: "On November 2, 1920, station KDKA in Pittsburgh broadcast the results of the Harding-Cox presidential election, marking the dawn of commercial radio in America. Within 3 years, there were over 500 licensed stations. Families gathered around their radio sets each evening, and for the first time in history, millions of people could hear the same voice at the same moment.",
+                footnote: "Radio transformed American culture almost overnight. By 1930, 40 percent of American households owned a radio. It created the first shared mass media experience and also made national advertising possible for the first time."
+            },
+            {
+                era: "The Roaring Twenties \u00b7 1919\u20131929",
+                title: "The Harlem Renaissance",
+                text: "Throughout the 1920s, the neighborhood of Harlem in New York City became the center of an extraordinary flowering of African American art, literature, and music. Writers like Langston Hughes and Zora Neale Hurston gave voice to the Black experience. Jazz musicians like Duke Ellington and Louis Armstrong created sounds that would reshape music forever.",
+                footnote: "The Harlem Renaissance was fueled in part by the Great Migration, which saw over 6 million African Americans move from the rural South to cities in the North and West between 1910 and 1970. Harlem's population doubled during the 1920s, creating a concentrated community of extraordinary creative energy."
+            },
+            {
+                era: "The Great Depression \u00b7 1929\u20131939",
+                title: "Black Tuesday and Its Aftermath",
+                text: "On October 29, 1929, the stock market crashed with a violence that stunned the nation. Over $14 billion in value vanished in a single day. Banks failed by the thousands. By 1933, unemployment had reached 25 percent. Bread lines stretched around city blocks, and families who had been comfortable just years before found themselves homeless and hungry.",
+                footnote: "The Dow Jones Industrial Average did not return to its pre-crash peak until November 1954, a full 25 years later. The psychological impact was equally lasting: an entire generation developed a deep distrust of banks and the stock market that they carried for the rest of their lives."
+            },
+            {
+                era: "The World at War Again \u00b7 1939\u20131945",
+                title: "D-Day: The Invasion of Normandy",
+                text: "In the early hours of June 6, 1944, over 156,000 Allied troops crossed the English Channel in the largest amphibious invasion in history. They landed on 5 beaches along the coast of Normandy, France, under withering enemy fire. By nightfall, the Allies had established a foothold in Europe. The liberation of the continent had begun. The cost was staggering: over 10,000 Allied casualties on that single day.",
+                footnote: "The invasion was originally scheduled for June 5 but was delayed by 24 hours due to bad weather. Eisenhower carried a handwritten note in his pocket accepting full blame in case the invasion failed. He never had to use it, but the note survived and is now one of the most moving documents of the war."
+            }
+        ];
+
+        // ===================================================================
+        // APP STATE
+        // ===================================================================
+        let currentPassageIndex = 0;
+        let currentCharIndex = 0;
+        let errors = 0;
+        let totalKeystrokes = 0;
+        let startTime = null;
+        let isTyping = false;
+        let isComplete = false;
+        let statsInterval = null;
+
+        // ===================================================================
+        // DOM ELEMENTS
+        // ===================================================================
+        const startScreen = document.getElementById('startScreen');
+        const typingScreen = document.getElementById('typingScreen');
+        const passageDisplay = document.getElementById('passageDisplay');
+        const passageTitle = document.getElementById('passageTitle');
+        const passageEra = document.getElementById('passageEra');
+        const passageCount = document.getElementById('passageCount');
+        const typingInput = document.getElementById('typingInput');
+        const clickPrompt = document.getElementById('clickPrompt');
+        const liveStats = document.getElementById('liveStats');
+        const liveWpm = document.getElementById('liveWpm');
+        const liveAccuracy = document.getElementById('liveAccuracy');
+        const liveProgress = document.getElementById('liveProgress');
+        const results = document.getElementById('results');
+        const finalWpm = document.getElementById('finalWpm');
+        const finalAccuracy = document.getElementById('finalAccuracy');
+        const finalErrors = document.getElementById('finalErrors');
+        const footnoteText = document.getElementById('footnoteText');
+        const nextBtn = document.getElementById('nextBtn');
+
+        // ===================================================================
+        // START & NAVIGATION
+        // ===================================================================
+        function startTyping() {
+            startScreen.style.display = 'none';
+            typingScreen.classList.add('visible');
+            loadPassage(currentPassageIndex);
+        }
+
+        function loadPassage(index) {
+            const passage = passages[index];
+
+            // Reset state
+            currentCharIndex = 0;
+            errors = 0;
+            totalKeystrokes = 0;
+            startTime = null;
+            isTyping = false;
+            isComplete = false;
+            if (statsInterval) clearInterval(statsInterval);
+
+            // Update UI
+            passageTitle.textContent = passage.title;
+            passageEra.textContent = passage.era;
+            passageCount.textContent = 'Passage ' + (index + 1) + ' of ' + passages.length;
+
+            // Render characters
+            passageDisplay.innerHTML = '';
+            for (let i = 0; i < passage.text.length; i++) {
+                const span = document.createElement('span');
+                span.className = 'char' + (i === 0 ? ' current' : '');
+                span.textContent = passage.text[i];
+                passageDisplay.appendChild(span);
+            }
+
+            // Reset input and prompt
+            typingInput.value = '';
+            clickPrompt.style.display = 'block';
+            clickPrompt.textContent = 'Click here or press any key to begin typing...';
+            clickPrompt.className = 'click-prompt';
+
+            // Reset stats
+            liveWpm.textContent = '0';
+            liveAccuracy.textContent = '100%';
+            liveProgress.textContent = '0%';
+            liveStats.style.display = 'flex';
+
+            // Hide results
+            results.classList.remove('visible');
+
+            // Update next button on last passage
+            nextBtn.textContent = index >= passages.length - 1 ? 'Start Over' : 'Next Passage';
+        }
+
+        function nextPassage() {
+            currentPassageIndex = (currentPassageIndex + 1) % passages.length;
+            loadPassage(currentPassageIndex);
+        }
+
+        function retryPassage() {
+            loadPassage(currentPassageIndex);
+        }
+
+        // ===================================================================
+        // TYPING ACTIVATION
+        // ===================================================================
+        function activateTyping() {
+            if (isComplete) return;
+            typingInput.focus();
+            clickPrompt.textContent = 'Typing active \u2014 start when ready...';
+            clickPrompt.classList.add('active');
+        }
+
+        // Listen for any keypress on the page to activate
+        document.addEventListener('keydown', function(e) {
+            if (startScreen.style.display !== 'none') return;
+            if (isComplete) return;
+            if (!typingInput.matches(':focus')) {
+                activateTyping();
+            }
+        });
+
+        // ===================================================================
+        // CORE TYPING ENGINE
+        // ===================================================================
+        typingInput.addEventListener('input', function(e) {
+            if (isComplete) return;
+
+            const passage = passages[currentPassageIndex];
+            const chars = passageDisplay.querySelectorAll('.char');
+
+            // Start timer on first keystroke
+            if (!startTime) {
+                startTime = new Date();
+                statsInterval = setInterval(updateLiveStats, 200);
+            }
+
+            const inputVal = typingInput.value;
+            const lastTyped = inputVal[inputVal.length - 1];
+
+            if (currentCharIndex < passage.text.length) {
+                totalKeystrokes++;
+                const expectedChar = passage.text[currentCharIndex];
+
+                if (lastTyped === expectedChar) {
+                    chars[currentCharIndex].classList.remove('current');
+                    chars[currentCharIndex].classList.add('correct');
+                } else {
+                    chars[currentCharIndex].classList.remove('current');
+                    chars[currentCharIndex].classList.add('incorrect');
+                    errors++;
+                }
+
+                currentCharIndex++;
+
+                // Mark next character as current
+                if (currentCharIndex < passage.text.length) {
+                    chars[currentCharIndex].classList.add('current');
+                }
+
+                // Check completion
+                if (currentCharIndex >= passage.text.length) {
+                    completePassage();
+                }
+            }
+
+            // Reset input to prevent it from growing
+            typingInput.value = '';
+        });
+
+        // Handle backspace - we don't allow going back (forward-only typing)
+        typingInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Backspace') {
+                e.preventDefault();
+            }
+            // Prevent Tab from leaving
+            if (e.key === 'Tab') {
+                e.preventDefault();
+            }
+        });
+
+        // ===================================================================
+        // STATS CALCULATION
+        // ===================================================================
+        function calculateWPM() {
+            if (!startTime || currentCharIndex === 0) return 0;
+            const elapsed = (new Date() - startTime) / 1000 / 60; // minutes
+            const words = currentCharIndex / 5; // standard: 5 chars = 1 word
+            return Math.round(words / elapsed);
+        }
+
+        function calculateAccuracy() {
+            if (totalKeystrokes === 0) return 100;
+            return Math.round(((totalKeystrokes - errors) / totalKeystrokes) * 100);
+        }
+
+        function updateLiveStats() {
+            liveWpm.textContent = calculateWPM();
+            liveAccuracy.textContent = calculateAccuracy() + '%';
+            const progress = Math.round((currentCharIndex / passages[currentPassageIndex].text.length) * 100);
+            liveProgress.textContent = progress + '%';
+        }
+
+        // ===================================================================
+        // COMPLETION
+        // ===================================================================
+        function completePassage() {
+            isComplete = true;
+            if (statsInterval) clearInterval(statsInterval);
+
+            const passage = passages[currentPassageIndex];
+            const wpm = calculateWPM();
+            const accuracy = calculateAccuracy();
+
+            // Hide prompt and live stats
+            clickPrompt.style.display = 'none';
+            liveStats.style.display = 'none';
+
+            // Show results
+            finalWpm.textContent = wpm;
+            finalAccuracy.textContent = accuracy + '%';
+            finalErrors.textContent = errors;
+            footnoteText.textContent = passage.footnote;
+
+            results.classList.add('visible');
+        }
+
+    </script>
+
 </body>
 </html>
