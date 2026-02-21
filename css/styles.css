@@ -477,29 +477,16 @@ body {
     font-family: 'Special Elite', monospace;
     font-size: 0.75rem;
     letter-spacing: 0.05em;
-    background: transparent;
-    border: 1px solid var(--ink-faded);
     color: var(--parchment-dark);
-    padding: 0.35rem 0.6rem;
-    border-radius: 3px;
-    cursor: pointer;
-    appearance: auto;
-    transition: all 0.3s;
+    opacity: 0.6;
 }
 
-.sound-select:hover {
-    border-color: var(--parchment);
-    color: var(--parchment);
-}
-
-.sound-select:focus {
-    outline: none;
-    border-color: var(--accent-gold);
-}
-
-.sound-select option {
-    background: #3a2f28;
-    color: var(--parchment);
+.sound-label {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    color: var(--parchment-dark);
+    opacity: 0.6;
 }
 
 /* === TYPING SCREEN (hidden by default) === */
