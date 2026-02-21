@@ -127,11 +127,8 @@ function playSound(type) {
             // Warning bell near end of line
             playBuffer(buffers.bell, 0.4, 1.0);
         } else if (type === 'carriageReturn') {
-            // End of a line — carriage return + bell, like a real typewriter
+            // End of a line — just the carriage return (bell already rang as warning)
             playBuffer(buffers.carriageReturn, 0.6, 1.0);
-            setTimeout(function() {
-                playBuffer(buffers.bell, 0.45, 1.0);
-            }, 200);
         } else if (type === 'complete') {
             // End of passage — louder carriage return + bell
             playBuffer(buffers.carriageReturn, 0.8, 1.0);
