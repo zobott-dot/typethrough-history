@@ -123,6 +123,9 @@ function playSound(type) {
         } else if (type === 'backspace') {
             // Higher pitch, quieter for backspace
             playBuffer(buffers.key, 0.4, 1.15);
+        } else if (type === 'bell') {
+            // Warning bell near end of line
+            playBuffer(buffers.bell, 0.4, 1.0);
         } else if (type === 'carriageReturn') {
             // End of a line — carriage return + bell, like a real typewriter
             playBuffer(buffers.carriageReturn, 0.6, 1.0);

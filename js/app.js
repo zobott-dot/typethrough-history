@@ -22,6 +22,7 @@ var startTime = null;
 var isTyping = false;
 var isComplete = false;
 var statsInterval = null;
+var bellPlayedForLine = -1; // tracks which line the bell has already rung for
 
 // --- DOM Elements ---
 var startScreen = document.getElementById('startScreen');
@@ -62,6 +63,7 @@ function loadPassage(index) {
     startTime = null;
     isTyping = false;
     isComplete = false;
+    bellPlayedForLine = -1;
     if (statsInterval) clearInterval(statsInterval);
 
     // Update UI
@@ -155,18 +157,41 @@ typingInput.addEventListener('input', function(e) {
             chars[currentCharIndex].classList.add('incorrect');
             errors++;
         }
-        // Check if we just crossed to a new line (carriage return moment)
-        var crossedLine = false;
-        if (currentCharIndex > 0 && currentCharIndex < passage.text.length - 1) {
-            var prevTop = chars[currentCharIndex].offsetTop;
-            var nextTop = chars[currentCharIndex + 1] ? chars[currentCharIndex + 1].offsetTop : prevTop;
-            if (nextTop > prevTop) {
-                crossedLine = true;
+        // --- Typewriter line-awareness ---
+        // Look ahead to find if a line wrap is coming soon
+        var bellDistance = 7; // bell rings this many chars before line end
+        var isAtLineWrap = false;
+        var isBellZone = false;
+
+        if (currentCharIndex < passage.text.length - 1) {
+            var currentTop = chars[currentCharIndex].offsetTop;
+
+            // Check if the NEXT character wraps to a new line
+            var nextTop = chars[currentCharIndex + 1] ? chars[currentCharIndex + 1].offsetTop : currentTop;
+            if (nextTop > currentTop) {
+                isAtLineWrap = true;
+            }
+
+            // Check if we're approaching a line wrap (bell warning zone)
+            if (!isAtLineWrap) {
+                for (var look = 1; look <= bellDistance; look++) {
+                    var ahead = currentCharIndex + look;
+                    if (ahead < passage.text.length) {
+                        if (chars[ahead].offsetTop > currentTop) {
+                            isBellZone = true;
+                            break;
+                        }
+                    }
+                }
             }
         }
 
-        if (crossedLine) {
+        if (isAtLineWrap) {
             playSound('carriageReturn');
+        } else if (isBellZone && bellPlayedForLine !== currentTop) {
+            bellPlayedForLine = currentTop;
+            playSound('bell');
+            playSound(lastTyped === ' ' ? 'space' : 'key');
         } else {
             playSound(lastTyped === ' ' ? 'space' : 'key');
         }
