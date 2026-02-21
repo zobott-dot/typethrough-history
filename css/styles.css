@@ -73,10 +73,10 @@ body {
 /* === MAIN DOCUMENT === */
 .document {
     position: relative;
-    max-width: 960px;
+    max-width: 1280px;
     width: 100%;
     background: var(--parchment);
-    padding: 3rem 4rem;
+    padding: 3rem 5rem;
     box-shadow:
         0 2px 8px var(--shadow),
         0 8px 32px rgba(44, 24, 16, 0.3),

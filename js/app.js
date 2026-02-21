@@ -2,19 +2,62 @@
 // APP — Typing engine, stats, navigation
 // ===================================================================
 
-// --- Shuffle passages on load ---
-function shufflePassages() {
-    for (var i = passages.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var temp = passages[i];
-        passages[i] = passages[j];
-        passages[j] = temp;
+// --- Passage freshness system ---
+// Uses localStorage to track recently seen passages across sessions.
+// Ensures you cycle through most of the library before seeing repeats.
+
+var recentPassageKey = 'typethrough-recent-passages';
+var recentLimit = Math.floor(passages.length * 0.75); // remember 75% of library
+
+function getRecentPassages() {
+    try {
+        var stored = localStorage.getItem(recentPassageKey);
+        return stored ? JSON.parse(stored) : [];
+    } catch(e) {
+        return [];
     }
 }
-shufflePassages();
 
-// --- App State ---
-var currentPassageIndex = 0;
+function markPassageSeen(title) {
+    var recent = getRecentPassages();
+    // Remove if already in list (so it moves to end)
+    recent = recent.filter(function(t) { return t !== title; });
+    recent.push(title);
+    // Trim to limit
+    while (recent.length > recentLimit) {
+        recent.shift();
+    }
+    try {
+        localStorage.setItem(recentPassageKey, JSON.stringify(recent));
+    } catch(e) {
+        // localStorage full or unavailable — continue without persistence
+    }
+}
+
+function pickNextPassage() {
+    var recent = getRecentPassages();
+    // Build list of unseen passages
+    var unseen = [];
+    for (var i = 0; i < passages.length; i++) {
+        if (recent.indexOf(passages[i].title) === -1) {
+            unseen.push(i);
+        }
+    }
+    // If all passages have been seen recently, clear history and use full list
+    if (unseen.length === 0) {
+        try { localStorage.removeItem(recentPassageKey); } catch(e) {}
+        unseen = [];
+        for (var j = 0; j < passages.length; j++) {
+            unseen.push(j);
+        }
+    }
+    // Pick a random index from unseen
+    var pick = unseen[Math.floor(Math.random() * unseen.length)];
+    return pick;
+}
+
+// Pick the first passage
+var currentPassageIndex = pickNextPassage();
 var currentCharIndex = 0;
 var errors = 0;
 var totalKeystrokes = 0;
@@ -56,6 +99,7 @@ function startTyping() {
 
 function loadPassage(index) {
     var passage = passages[index];
+    markPassageSeen(passage.title);
 
     // Reset state
     currentCharIndex = 0;
@@ -71,7 +115,8 @@ function loadPassage(index) {
     // Update UI
     passageTitle.textContent = passage.title;
     passageEra.textContent = passage.era;
-    passageCount.textContent = 'Passage ' + (index + 1) + ' of ' + passages.length;
+    var unseenCount = passages.length - getRecentPassages().length;
+    passageCount.textContent = unseenCount + ' of ' + passages.length + ' passages remaining';
 
     // Render characters
     passageDisplay.innerHTML = '';
@@ -98,11 +143,11 @@ function loadPassage(index) {
     results.classList.remove('visible');
 
     // Update next button on last passage
-    nextBtn.textContent = index >= passages.length - 1 ? 'Start Over' : 'Next Passage';
+    nextBtn.textContent = 'Next Passage';
 }
 
 function nextPassage() {
-    currentPassageIndex = (currentPassageIndex + 1) % passages.length;
+    currentPassageIndex = pickNextPassage();
     loadPassage(currentPassageIndex);
 }
 
