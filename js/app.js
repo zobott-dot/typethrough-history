@@ -23,6 +23,7 @@ var isTyping = false;
 var isComplete = false;
 var statsInterval = null;
 var bellPlayedForLine = -1; // tracks which line the bell has already rung for
+var carriagePlayedAtIndex = -1; // tracks which char index the carriage return played at
 
 // --- DOM Elements ---
 var startScreen = document.getElementById('startScreen');
@@ -64,6 +65,7 @@ function loadPassage(index) {
     isTyping = false;
     isComplete = false;
     bellPlayedForLine = -1;
+    carriagePlayedAtIndex = -1;
     if (statsInterval) clearInterval(statsInterval);
 
     // Update UI
@@ -186,7 +188,8 @@ typingInput.addEventListener('input', function(e) {
             }
         }
 
-        if (isAtLineWrap) {
+        if (isAtLineWrap && carriagePlayedAtIndex !== currentCharIndex) {
+            carriagePlayedAtIndex = currentCharIndex;
             playSound('carriageReturn');
         } else if (isBellZone && bellPlayedForLine !== currentTop) {
             bellPlayedForLine = currentTop;
