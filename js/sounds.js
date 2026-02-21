@@ -123,8 +123,14 @@ function playSound(type) {
         } else if (type === 'backspace') {
             // Higher pitch, quieter for backspace
             playBuffer(buffers.key, 0.4, 1.15);
+        } else if (type === 'carriageReturn') {
+            // End of a line — carriage return + bell, like a real typewriter
+            playBuffer(buffers.carriageReturn, 0.6, 1.0);
+            setTimeout(function() {
+                playBuffer(buffers.bell, 0.45, 1.0);
+            }, 200);
         } else if (type === 'complete') {
-            // Carriage return followed by bell
+            // End of passage — louder carriage return + bell
             playBuffer(buffers.carriageReturn, 0.8, 1.0);
             setTimeout(function() {
                 playBuffer(buffers.bell, 0.6, 1.0);

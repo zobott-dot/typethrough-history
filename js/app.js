@@ -155,7 +155,21 @@ typingInput.addEventListener('input', function(e) {
             chars[currentCharIndex].classList.add('incorrect');
             errors++;
         }
-        playSound(lastTyped === ' ' ? 'space' : 'key');
+        // Check if we just crossed to a new line (carriage return moment)
+        var crossedLine = false;
+        if (currentCharIndex > 0 && currentCharIndex < passage.text.length - 1) {
+            var prevTop = chars[currentCharIndex].offsetTop;
+            var nextTop = chars[currentCharIndex + 1] ? chars[currentCharIndex + 1].offsetTop : prevTop;
+            if (nextTop > prevTop) {
+                crossedLine = true;
+            }
+        }
+
+        if (crossedLine) {
+            playSound('carriageReturn');
+        } else {
+            playSound(lastTyped === ' ' ? 'space' : 'key');
+        }
 
         currentCharIndex++;
 
