@@ -500,9 +500,21 @@ function showStats() {
     renderStats();
 }
 
+function showStatsFromTyping() {
+    typingScreen.classList.remove('visible');
+    statsScreen.classList.add('visible');
+    statsScreen.dataset.returnTo = 'typing';
+    renderStats();
+}
+
 function hideStats() {
     statsScreen.classList.remove('visible');
-    startScreen.style.display = '';
+    if (statsScreen.dataset.returnTo === 'typing') {
+        typingScreen.classList.add('visible');
+        statsScreen.dataset.returnTo = '';
+    } else {
+        startScreen.style.display = '';
+    }
 }
 
 function clearStats() {
