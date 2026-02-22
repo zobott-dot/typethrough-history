@@ -59,7 +59,57 @@
                 </button>
             </div>
             <button class="btn btn-primary" onclick="startTyping()">Begin Typing</button>
-            <div class="version">v0.4.0</div>
+            <button class="btn" onclick="showStats()">My Progress</button>
+            <div class="version">v0.5.0</div>
+        </div>
+
+        <!-- ===== STATS DASHBOARD ===== -->
+        <div class="stats-screen" id="statsScreen">
+            <div class="ornament">&#10087; &#10022; &#10087;</div>
+            <h2 class="start-title">Your Progress</h2>
+            <div class="results-ornament">&mdash; &#10022; &mdash;</div>
+
+            <div class="stats-summary">
+                <div class="result-stat">
+                    <span class="result-stat-value" id="statsTotalPassages">0</span>
+                    <span class="result-stat-label">Passages Completed</span>
+                </div>
+                <div class="result-stat">
+                    <span class="result-stat-value" id="statsBestWpm">0</span>
+                    <span class="result-stat-label">Best WPM</span>
+                </div>
+                <div class="result-stat">
+                    <span class="result-stat-value" id="statsAvgWpm">0</span>
+                    <span class="result-stat-label">Average WPM</span>
+                </div>
+                <div class="result-stat">
+                    <span class="result-stat-value" id="statsAvgAccuracy">0%</span>
+                    <span class="result-stat-label">Average Accuracy</span>
+                </div>
+            </div>
+
+            <div class="stats-chart-section">
+                <h3 class="stats-chart-title">Recent Sessions</h3>
+                <div class="stats-chart" id="statsChart">
+                    <div class="stats-chart-empty">Complete a few passages to see your trend here.</div>
+                </div>
+                <div class="stats-chart-labels">
+                    <span class="stats-chart-label-left">Older</span>
+                    <span class="stats-chart-label-right">Recent</span>
+                </div>
+            </div>
+
+            <div class="stats-recent-section">
+                <h3 class="stats-chart-title">Recent Passages</h3>
+                <div class="stats-recent-list" id="statsRecentList">
+                    <div class="stats-chart-empty">No passages completed yet.</div>
+                </div>
+            </div>
+
+            <div class="button-row" style="margin-top: 1.5rem;">
+                <button class="btn" onclick="clearStats()">Clear History</button>
+                <button class="btn btn-primary" onclick="hideStats()">Back</button>
+            </div>
         </div>
 
         <!-- ===== TYPING SCREEN ===== -->
