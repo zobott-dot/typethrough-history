@@ -700,17 +700,6 @@ body {
     display: block;
 }
 
-.stats-chart-labels {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.25rem 1rem 0;
-    font-family: 'Special Elite', monospace;
-    font-size: 0.6rem;
-    color: var(--ink-faded);
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-}
-
 .stats-chart-empty {
     font-family: 'Crimson Text', Georgia, serif;
     font-size: 1rem;
