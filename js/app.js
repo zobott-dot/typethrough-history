@@ -114,30 +114,53 @@ var nextBtn = document.getElementById('nextBtn');
 var progressBar = document.getElementById('progressBar');
 
 // ===================================================================
+// NAVIGATION
+// ===================================================================
+var navHome = document.getElementById('navHome');
+var navStats = document.getElementById('navStats');
+
+function updateNav(activePage) {
+    navHome.classList.remove('nav-active');
+    navStats.classList.remove('nav-active');
+    if (activePage === 'home') navHome.classList.add('nav-active');
+    if (activePage === 'stats') navStats.classList.add('nav-active');
+}
+updateNav('home');
+
+function hideAllScreens() {
+    if (statsInterval) clearInterval(statsInterval);
+    startScreen.style.display = 'none';
+    typingScreen.classList.remove('visible');
+    statsScreen.classList.remove('visible');
+    isComplete = false;
+}
+
+function goHome() {
+    hideAllScreens();
+    startScreen.style.display = '';
+    updateNav('home');
+    currentPassageIndex = pickNextPassage();
+}
+
+function navigateToStats() {
+    hideAllScreens();
+    statsScreen.classList.add('visible');
+    updateNav('stats');
+    renderStats();
+}
+
+// ===================================================================
 // START & NAVIGATION
 // ===================================================================
 function startTyping() {
-    startScreen.style.display = 'none';
+    hideAllScreens();
     typingScreen.classList.add('visible');
+    updateNav('');
     loadPassage(currentPassageIndex);
 }
 
 function quitToHome() {
-    if (statsInterval) clearInterval(statsInterval);
-    typingScreen.classList.remove('visible');
-    startScreen.style.display = '';
-    isComplete = false;
-    currentPassageIndex = pickNextPassage();
-}
-
-function goHome() {
-    if (statsInterval) clearInterval(statsInterval);
-    typingScreen.classList.remove('visible');
-    statsScreen.classList.remove('visible');
-    statsScreen.dataset.returnTo = '';
-    startScreen.style.display = '';
-    isComplete = false;
-    currentPassageIndex = pickNextPassage();
+    goHome();
 }
 
 function skipPassage() {
@@ -500,26 +523,15 @@ function getSessionHistory() {
 var statsScreen = document.getElementById('statsScreen');
 
 function showStats() {
-    startScreen.style.display = 'none';
-    statsScreen.classList.add('visible');
-    renderStats();
+    navigateToStats();
 }
 
 function showStatsFromTyping() {
-    typingScreen.classList.remove('visible');
-    statsScreen.classList.add('visible');
-    statsScreen.dataset.returnTo = 'typing';
-    renderStats();
+    navigateToStats();
 }
 
 function hideStats() {
-    statsScreen.classList.remove('visible');
-    if (statsScreen.dataset.returnTo === 'typing') {
-        typingScreen.classList.add('visible');
-        statsScreen.dataset.returnTo = '';
-    } else {
-        startScreen.style.display = '';
-    }
+    goHome();
 }
 
 function clearStats() {

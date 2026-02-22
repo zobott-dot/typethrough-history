@@ -22,6 +22,13 @@
 
     <main class="document">
 
+        <!-- ===== PERSISTENT NAV ===== -->
+        <nav class="site-nav" id="siteNav">
+            <span class="nav-link" id="navHome" onclick="goHome()">Home</span>
+            <span class="nav-separator">&#183;</span>
+            <span class="nav-link" id="navStats" onclick="navigateToStats()">My Progress</span>
+        </nav>
+
         <!-- ===== START SCREEN ===== -->
         <div class="start-screen" id="startScreen">
             <div class="ornament">&#10087; &#10022; &#10087;</div>
@@ -59,8 +66,7 @@
                 </button>
             </div>
             <button class="btn btn-primary" onclick="startTyping()">Begin Typing</button>
-            <button class="btn" onclick="showStats()">My Progress</button>
-            <div class="version">v0.5.0</div>
+            <div class="version">v0.6.0</div>
         </div>
 
         <!-- ===== STATS DASHBOARD ===== -->
@@ -104,7 +110,6 @@
 
             <div class="button-row" style="margin-top: 1.5rem;">
                 <button class="btn" onclick="clearStats()">Clear History</button>
-                <button class="btn btn-primary" onclick="hideStats()">Back</button>
             </div>
         </div>
 
@@ -146,7 +151,6 @@
                 </div>
                 <div class="stat stat-quit">
                     <button class="btn-quit" onclick="skipPassage()">Skip &rarr;</button>
-                    <button class="btn-quit" onclick="quitToHome()">&larr; Quit</button>
                 </div>
             </div>
 
@@ -175,7 +179,6 @@
                 </div>
                 <div class="button-row">
                     <button class="btn" onclick="retryPassage()">Try Again</button>
-                    <button class="btn" onclick="showStatsFromTyping()">My Progress</button>
                     <button class="btn btn-primary" id="nextBtn" onclick="nextPassage()">Next Passage</button>
                 </div>
             </div>

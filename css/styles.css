@@ -104,6 +104,41 @@ body {
     pointer-events: none;
 }
 
+/* === PERSISTENT NAV === */
+.site-nav {
+    text-align: right;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+}
+
+.nav-link {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.8rem;
+    color: var(--ink-faded);
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.nav-link:hover {
+    color: var(--accent-gold);
+}
+
+.nav-link.nav-active {
+    color: var(--ink-dark);
+    cursor: default;
+}
+
+.nav-link.nav-active:hover {
+    color: var(--ink-dark);
+}
+
+.nav-separator {
+    color: var(--parchment-edge);
+    margin: 0 0.5rem;
+    font-size: 0.9rem;
+}
+
 /* === PASSAGE INFO BAR === */
 .passage-info {
     display: flex;
