@@ -123,14 +123,19 @@ function startTyping() {
 }
 
 function quitToHome() {
-    // Stop any running stats timer
     if (statsInterval) clearInterval(statsInterval);
-
-    // Hide typing screen, show start screen
     typingScreen.classList.remove('visible');
     startScreen.style.display = '';
+    isComplete = false;
+    currentPassageIndex = pickNextPassage();
+}
 
-    // Reset for next time
+function goHome() {
+    if (statsInterval) clearInterval(statsInterval);
+    typingScreen.classList.remove('visible');
+    statsScreen.classList.remove('visible');
+    statsScreen.dataset.returnTo = '';
+    startScreen.style.display = '';
     isComplete = false;
     currentPassageIndex = pickNextPassage();
 }
