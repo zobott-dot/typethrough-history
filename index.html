@@ -30,29 +30,33 @@
             <p class="start-description">
                 Type your way through the defining moments of a turbulent age &mdash;
                 from the dawn of flight to the atomic era. Each passage teaches
-                as you type.
+                as you type. Choose an era or type them all.
             </p>
-            <div class="start-era-list">
-                <span class="era">
+            <div class="start-era-list" id="eraList">
+                <button class="era-btn selected" onclick="selectEra('all')">
+                    <span class="era-name">All Eras</span>
+                    <span class="era-years">1900&ndash;1945</span>
+                </button>
+                <button class="era-btn" onclick="selectEra('The New Century')">
                     <span class="era-name">The New Century</span>
                     <span class="era-years">1900&ndash;1913</span>
-                </span>
-                <span class="era">
+                </button>
+                <button class="era-btn" onclick="selectEra('The Great War')">
                     <span class="era-name">The Great War</span>
                     <span class="era-years">1914&ndash;1918</span>
-                </span>
-                <span class="era">
+                </button>
+                <button class="era-btn" onclick="selectEra('The Roaring Twenties')">
                     <span class="era-name">The Roaring Twenties</span>
                     <span class="era-years">1919&ndash;1929</span>
-                </span>
-                <span class="era">
+                </button>
+                <button class="era-btn" onclick="selectEra('The Great Depression')">
                     <span class="era-name">The Great Depression</span>
                     <span class="era-years">1929&ndash;1939</span>
-                </span>
-                <span class="era">
+                </button>
+                <button class="era-btn" onclick="selectEra('The World at War Again')">
                     <span class="era-name">The World at War Again</span>
                     <span class="era-years">1939&ndash;1945</span>
-                </span>
+                </button>
             </div>
             <button class="btn btn-primary" onclick="startTyping()">Begin Typing</button>
             <div class="version">v0.4.0</div>
@@ -95,6 +99,7 @@
                     <span class="stat-label">Progress</span>
                 </div>
                 <div class="stat stat-quit">
+                    <button class="btn-quit" onclick="skipPassage()">Skip &rarr;</button>
                     <button class="btn-quit" onclick="quitToHome()">&larr; Quit</button>
                 </div>
             </div>

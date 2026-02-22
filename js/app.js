@@ -8,6 +8,25 @@
 
 var recentPassageKey = 'typethrough-recent-passages';
 var recentLimit = Math.floor(passages.length * 0.75); // remember 75% of library
+var selectedEra = 'all'; // current era filter
+
+function selectEra(era) {
+    selectedEra = era;
+    // Update button states
+    var buttons = document.querySelectorAll('.era-btn');
+    buttons.forEach(function(btn) {
+        btn.classList.remove('selected');
+    });
+    // Find the clicked button by matching the era
+    buttons.forEach(function(btn) {
+        var btnEra = btn.getAttribute('onclick').match(/selectEra\('(.+?)'\)/);
+        if (btnEra && btnEra[1] === era) {
+            btn.classList.add('selected');
+        }
+    });
+    // Pre-pick a passage for the selected era
+    currentPassageIndex = pickNextPassage();
+}
 
 function getRecentPassages() {
     try {
@@ -36,21 +55,25 @@ function markPassageSeen(title) {
 
 function pickNextPassage() {
     var recent = getRecentPassages();
-    // Build list of unseen passages
-    var unseen = [];
+
+    // Build list of eligible passages (matching era filter)
+    var eligible = [];
     for (var i = 0; i < passages.length; i++) {
-        if (recent.indexOf(passages[i].title) === -1) {
-            unseen.push(i);
+        if (selectedEra === 'all' || passages[i].era.indexOf(selectedEra) !== -1) {
+            eligible.push(i);
         }
     }
-    // If all passages have been seen recently, clear history and use full list
+
+    // From eligible, filter out recently seen
+    var unseen = eligible.filter(function(i) {
+        return recent.indexOf(passages[i].title) === -1;
+    });
+
+    // If all eligible passages have been seen, use full eligible list
     if (unseen.length === 0) {
-        try { localStorage.removeItem(recentPassageKey); } catch(e) {}
-        unseen = [];
-        for (var j = 0; j < passages.length; j++) {
-            unseen.push(j);
-        }
+        unseen = eligible;
     }
+
     // Pick a random index from unseen
     var pick = unseen[Math.floor(Math.random() * unseen.length)];
     return pick;
@@ -110,6 +133,15 @@ function quitToHome() {
     // Reset for next time
     isComplete = false;
     currentPassageIndex = pickNextPassage();
+}
+
+function skipPassage() {
+    // Stop any running stats timer
+    if (statsInterval) clearInterval(statsInterval);
+
+    // Pick a new passage and load it
+    currentPassageIndex = pickNextPassage();
+    loadPassage(currentPassageIndex);
 }
 
 function loadPassage(index) {
@@ -191,6 +223,29 @@ document.addEventListener('keydown', function(e) {
 });
 
 // ===================================================================
+// CHARACTER NORMALIZATION
+// Accepts standard keyboard characters for special Unicode characters
+// ===================================================================
+function charsMatch(typed, expected) {
+    if (typed === expected) return true;
+
+    // Em dash or en dash: accept hyphen
+    if ((expected === '\u2014' || expected === '\u2013') && typed === '-') return true;
+
+    // Accented e: accept plain e
+    if (expected === '\u00e9' && typed === 'e') return true;
+
+    // Superscript 2: accept 2
+    if (expected === '\u00b2' && typed === '2') return true;
+
+    // Curly quotes: accept straight quotes
+    if ((expected === '\u201C' || expected === '\u201D') && typed === '"') return true;
+    if ((expected === '\u2018' || expected === '\u2019') && typed === "'") return true;
+
+    return false;
+}
+
+// ===================================================================
 // CORE TYPING ENGINE
 // ===================================================================
 typingInput.addEventListener('input', function(e) {
@@ -212,7 +267,7 @@ typingInput.addEventListener('input', function(e) {
         totalKeystrokes++;
         var expectedChar = passage.text[currentCharIndex];
 
-        if (lastTyped === expectedChar) {
+        if (charsMatch(lastTyped, expectedChar)) {
             chars[currentCharIndex].classList.remove('current');
             chars[currentCharIndex].classList.add('correct');
         } else {
