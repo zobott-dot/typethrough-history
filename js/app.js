@@ -82,11 +82,13 @@ var liveWpm = document.getElementById('liveWpm');
 var liveAccuracy = document.getElementById('liveAccuracy');
 var liveProgress = document.getElementById('liveProgress');
 var results = document.getElementById('results');
+var resultsRating = document.getElementById('resultsRating');
 var finalWpm = document.getElementById('finalWpm');
 var finalAccuracy = document.getElementById('finalAccuracy');
 var finalErrors = document.getElementById('finalErrors');
 var footnoteText = document.getElementById('footnoteText');
 var nextBtn = document.getElementById('nextBtn');
+var progressBar = document.getElementById('progressBar');
 
 // ===================================================================
 // START & NAVIGATION
@@ -138,6 +140,7 @@ function loadPassage(index) {
     liveAccuracy.textContent = '100%';
     liveProgress.textContent = '0%';
     liveStats.style.display = 'flex';
+    progressBar.style.width = '0%';
 
     // Hide results
     results.classList.remove('visible');
@@ -314,15 +317,46 @@ function updateLiveStats() {
     liveAccuracy.textContent = calculateAccuracy() + '%';
     var progress = Math.round((currentCharIndex / passages[currentPassageIndex].text.length) * 100);
     liveProgress.textContent = progress + '%';
+    progressBar.style.width = progress + '%';
 }
 
 // ===================================================================
 // COMPLETION
 // ===================================================================
+function getPerformanceRating(wpm, accuracy) {
+    if (wpm >= 60 && accuracy >= 97) return { text: 'Legendary Typist', css: 'rating-legendary' };
+    if (wpm >= 45 && accuracy >= 95) return { text: 'Expert Typist', css: 'rating-excellent' };
+    if (wpm >= 30 && accuracy >= 90) return { text: 'Solid Typist', css: 'rating-solid' };
+    if (wpm >= 20 && accuracy >= 80) return { text: 'Getting There', css: 'rating-solid' };
+    return { text: 'Keep Practicing', css: 'rating-learning' };
+}
+
+function getStatClass(type, value) {
+    if (type === 'wpm') {
+        if (value >= 50) return 'stat-great';
+        if (value >= 30) return 'stat-good';
+        return 'stat-needs-work';
+    }
+    if (type === 'accuracy') {
+        if (value >= 95) return 'stat-great';
+        if (value >= 85) return 'stat-good';
+        return 'stat-needs-work';
+    }
+    if (type === 'errors') {
+        if (value <= 2) return 'stat-great';
+        if (value <= 8) return 'stat-good';
+        return 'stat-needs-work';
+    }
+    return 'stat-good';
+}
+
 function completePassage() {
     isComplete = true;
     if (statsInterval) clearInterval(statsInterval);
     playSound('complete');
+
+    // Fill progress bar to 100%
+    progressBar.style.width = '100%';
 
     var passage = passages[currentPassageIndex];
     var wpm = calculateWPM();
@@ -332,10 +366,19 @@ function completePassage() {
     clickPrompt.style.display = 'none';
     liveStats.style.display = 'none';
 
-    // Show results
+    // Performance rating
+    var rating = getPerformanceRating(wpm, accuracy);
+    resultsRating.textContent = rating.text;
+    resultsRating.className = 'results-rating ' + rating.css;
+
+    // Color-coded stats
     finalWpm.textContent = wpm;
+    finalWpm.className = 'result-stat-value ' + getStatClass('wpm', wpm);
     finalAccuracy.textContent = accuracy + '%';
+    finalAccuracy.className = 'result-stat-value ' + getStatClass('accuracy', accuracy);
     finalErrors.textContent = errors;
+    finalErrors.className = 'result-stat-value ' + getStatClass('errors', errors);
+
     footnoteText.textContent = passage.footnote;
 
     results.classList.add('visible');

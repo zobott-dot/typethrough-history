@@ -55,7 +55,7 @@
                 </span>
             </div>
             <button class="btn btn-primary" onclick="startTyping()">Begin Typing</button>
-            <div class="version">v0.3.0</div>
+            <div class="version">v0.4.0</div>
         </div>
 
         <!-- ===== TYPING SCREEN ===== -->
@@ -77,6 +77,10 @@
             <input type="text" class="typing-input" id="typingInput"
                    autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
 
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="progressBar"></div>
+            </div>
+
             <div class="live-stats" id="liveStats">
                 <div class="stat">
                     <span class="stat-value" id="liveWpm">0</span>
@@ -96,6 +100,7 @@
             <div class="results" id="results">
                 <h3 class="results-title">Passage Complete</h3>
                 <div class="results-ornament">&mdash; &#10022; &mdash;</div>
+                <div class="results-rating" id="resultsRating"></div>
                 <div class="results-stats">
                     <div class="result-stat">
                         <span class="result-stat-value" id="finalWpm">0</span>

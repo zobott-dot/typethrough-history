@@ -55,16 +55,16 @@ body {
 
 .header h1 {
     font-family: 'IM Fell English', Georgia, serif;
-    font-size: 2.6rem;
+    font-size: 2rem;
     color: var(--parchment);
-    letter-spacing: 0.02em;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    letter-spacing: 0.08em;
 }
 
-.header .tagline {
+.tagline {
     font-family: 'Special Elite', monospace;
-    font-size: 0.9rem;
-    color: var(--ink-faded);
+    font-size: 0.8rem;
+    color: var(--parchment-edge);
     letter-spacing: 0.15em;
     text-transform: uppercase;
     margin-top: 0.25rem;
@@ -80,24 +80,21 @@ body {
     box-shadow:
         0 2px 8px var(--shadow),
         0 8px 32px rgba(44, 24, 16, 0.3),
-        inset 0 0 80px rgba(212, 196, 154, 0.3);
-    animation: fadeIn 1s ease-out 0.2s both;
+        inset 0 0 60px rgba(0, 0, 0, 0.03);
+    border-radius: 2px;
+    animation: fadeIn 0.6s ease-out;
 }
 
+/* Paper edge effect */
 .document::before {
     content: '';
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     border: 1px solid var(--parchment-edge);
-    pointer-events: none;
-}
-
-.document::after {
-    content: '';
-    position: absolute;
-    top: 8px; left: 8px; right: 8px; bottom: 8px;
-    border: 1px solid var(--parchment-edge);
-    opacity: 0.4;
+    border-radius: 2px;
     pointer-events: none;
 }
 
@@ -105,28 +102,28 @@ body {
 .passage-info {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 1.25rem;
+    align-items: center;
+    margin-bottom: 0.75rem;
     padding-bottom: 0.75rem;
     border-bottom: 1px solid var(--parchment-edge);
 }
 
 .passage-era {
     font-family: 'Special Elite', monospace;
-    font-size: 0.95rem;
-    color: var(--accent-gold);
-    letter-spacing: 0.1em;
+    font-size: 0.85rem;
+    color: var(--accent-red-soft);
     text-transform: uppercase;
+    letter-spacing: 0.1em;
 }
 
 .passage-count {
     font-family: 'Special Elite', monospace;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     color: var(--ink-faded);
     letter-spacing: 0.05em;
 }
 
-/* === PASSAGE DISPLAY === */
+/* === PASSAGE TITLE === */
 .passage-title {
     font-family: 'IM Fell English', Georgia, serif;
     font-size: 1.6rem;
@@ -135,6 +132,7 @@ body {
     line-height: 1.3;
 }
 
+/* === PASSAGE DISPLAY (typing area) === */
 .passage-display {
     font-family: 'Crimson Text', Georgia, serif;
     font-size: 1.6rem;
@@ -143,7 +141,6 @@ body {
     margin-bottom: 1.75rem;
     min-height: 140px;
     position: relative;
-    user-select: none;
 }
 
 .passage-display .char {
@@ -162,19 +159,20 @@ body {
     border-radius: 2px;
 }
 
+/* === TYPEWRITER CURSOR === */
 .passage-display .char.current {
-    border-bottom: 2px solid var(--accent-gold);
+    color: var(--ink-dark);
 }
 
-.passage-display .char.current::after {
+.passage-display .char.current::before {
     content: '';
     position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 100%;
-    height: 2px;
+    left: -1px;
+    top: 0.15em;
+    width: 2px;
+    height: 1.1em;
     background: var(--accent-gold);
-    animation: cursorPulse 1s ease-in-out infinite;
+    animation: cursorBlink 0.8s ease-in-out infinite;
 }
 
 /* === HIDDEN INPUT === */
@@ -204,9 +202,27 @@ body {
 }
 
 .click-prompt.active {
-    border-color: var(--correct-green);
-    color: var(--correct-green);
+    border-color: var(--accent-gold);
+    color: var(--accent-gold);
     border-style: solid;
+}
+
+/* === PROGRESS BAR === */
+.progress-bar-container {
+    width: 100%;
+    height: 4px;
+    background: var(--parchment-edge);
+    border-radius: 2px;
+    margin-bottom: 1.25rem;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent-gold), var(--accent-gold-soft));
+    border-radius: 2px;
+    transition: width 0.15s ease-out;
 }
 
 /* === LIVE STATS === */
@@ -216,7 +232,6 @@ body {
     gap: 2.5rem;
     padding: 0.75rem 0;
     border-top: 1px solid var(--parchment-edge);
-    margin-bottom: 0;
 }
 
 .stat {
@@ -225,31 +240,31 @@ body {
 
 .stat-value {
     font-family: 'Special Elite', monospace;
-    font-size: 1.8rem;
+    font-size: 1.4rem;
     color: var(--ink-dark);
-    display: block;
-    line-height: 1;
 }
 
 .stat-label {
-    font-family: 'Crimson Text', Georgia, serif;
-    font-size: 0.85rem;
+    font-family: 'Special Elite', monospace;
+    font-size: 0.7rem;
     color: var(--ink-faded);
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    margin-top: 0.3rem;
+    display: block;
+    margin-top: 0.15rem;
 }
 
 /* === RESULTS SCREEN === */
 .results {
     display: none;
     text-align: center;
-    padding: 1rem 0;
+    padding-top: 1rem;
+    border-top: 1px solid var(--parchment-edge);
 }
 
 .results.visible {
     display: block;
-    animation: fadeIn 0.6s ease-out;
+    animation: resultsReveal 0.6s ease-out;
 }
 
 .results-title {
@@ -264,7 +279,43 @@ body {
     font-size: 1rem;
     letter-spacing: 0.5rem;
     opacity: 0.6;
+    margin-bottom: 0.5rem;
+}
+
+/* Performance rating */
+.results-rating {
+    font-family: 'Special Elite', monospace;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
     margin-bottom: 1.25rem;
+    padding: 0.4rem 1.2rem;
+    display: inline-block;
+    border-radius: 3px;
+}
+
+.rating-legendary {
+    color: var(--accent-gold);
+    border: 1px solid var(--accent-gold);
+    background: rgba(184, 134, 11, 0.08);
+}
+
+.rating-excellent {
+    color: var(--correct-green);
+    border: 1px solid var(--correct-green);
+    background: rgba(45, 90, 30, 0.06);
+}
+
+.rating-solid {
+    color: var(--ink-medium);
+    border: 1px solid var(--ink-faded);
+    background: rgba(74, 55, 40, 0.04);
+}
+
+.rating-learning {
+    color: var(--ink-faded);
+    border: 1px solid var(--parchment-edge);
+    background: rgba(139, 37, 0, 0.04);
 }
 
 .results-stats {
@@ -284,6 +335,18 @@ body {
     color: var(--ink-dark);
     display: block;
     line-height: 1;
+}
+
+.result-stat-value.stat-great {
+    color: var(--correct-green);
+}
+
+.result-stat-value.stat-good {
+    color: var(--ink-dark);
+}
+
+.result-stat-value.stat-needs-work {
+    color: var(--accent-red-soft);
 }
 
 .result-stat-label {
@@ -396,41 +459,44 @@ body {
     color: var(--ink-medium);
     font-style: italic;
     line-height: 1.8;
-    max-width: 580px;
+    max-width: 680px;
     margin: 0 auto 1.75rem;
 }
 
 .start-era-list {
-    font-family: 'Crimson Text', Georgia, serif;
-    font-size: 1.15rem;
-    color: var(--ink-light);
-    line-height: 2.1;
-    margin-bottom: 1.75rem;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    margin-bottom: 2rem;
 }
 
-.start-era-list .era {
-    display: block;
+.era {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.start-era-list .era-name {
+.era-name {
     font-family: 'IM Fell English', Georgia, serif;
-    color: var(--ink-medium);
+    font-size: 1.05rem;
+    color: var(--ink-dark);
 }
 
-.start-era-list .era-years {
+.era-years {
     font-family: 'Special Elite', monospace;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     color: var(--ink-faded);
-    letter-spacing: 0.05em;
+    letter-spacing: 0.1em;
 }
 
 .version {
     font-family: 'Special Elite', monospace;
-    font-size: 0.7rem;
-    color: var(--parchment-edge);
-    text-align: center;
-    margin-top: 1rem;
+    font-size: 0.65rem;
+    color: var(--ink-faded);
+    margin-top: 1.5rem;
     letter-spacing: 0.1em;
+    opacity: 0.5;
 }
 
 /* === SOUND CONTROLS === */
@@ -438,19 +504,19 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    margin-top: 0.6rem;
+    gap: 0.6rem;
+    margin-top: 0.75rem;
 }
 
 .sound-btn {
+    font-size: 1rem;
     background: transparent;
-    border: 1px solid var(--ink-faded);
+    border: 1px solid var(--parchment-dark);
     color: var(--parchment-dark);
-    width: 2.2rem;
-    height: 2.2rem;
+    width: 2rem;
+    height: 2rem;
     border-radius: 50%;
     cursor: pointer;
-    font-size: 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -473,14 +539,6 @@ body {
     opacity: 0.5;
 }
 
-.sound-select {
-    font-family: 'Special Elite', monospace;
-    font-size: 0.75rem;
-    letter-spacing: 0.05em;
-    color: var(--parchment-dark);
-    opacity: 0.6;
-}
-
 .sound-label {
     font-family: 'Special Elite', monospace;
     font-size: 0.75rem;
@@ -492,10 +550,13 @@ body {
 /* === TYPING SCREEN (hidden by default) === */
 .typing-screen {
     display: none;
+    opacity: 0;
+    transition: opacity 0.4s ease-out;
 }
 
 .typing-screen.visible {
     display: block;
+    animation: fadeIn 0.5s ease-out forwards;
 }
 
 /* === ANIMATIONS === */
@@ -504,10 +565,35 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes cursorPulse {
+@keyframes cursorBlink {
     0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
+    50% { opacity: 0; }
 }
+
+@keyframes resultsReveal {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes statPop {
+    0% { transform: scale(0.8); opacity: 0; }
+    60% { transform: scale(1.05); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.result-stat {
+    animation: statPop 0.5s ease-out backwards;
+}
+
+.result-stat:nth-child(1) { animation-delay: 0.1s; }
+.result-stat:nth-child(2) { animation-delay: 0.25s; }
+.result-stat:nth-child(3) { animation-delay: 0.4s; }
 
 /* === RESPONSIVE === */
 @media (max-width: 600px) {
