@@ -99,6 +99,19 @@ function startTyping() {
     loadPassage(currentPassageIndex);
 }
 
+function quitToHome() {
+    // Stop any running stats timer
+    if (statsInterval) clearInterval(statsInterval);
+
+    // Hide typing screen, show start screen
+    typingScreen.classList.remove('visible');
+    startScreen.style.display = '';
+
+    // Reset for next time
+    isComplete = false;
+    currentPassageIndex = pickNextPassage();
+}
+
 function loadPassage(index) {
     var passage = passages[index];
     markPassageSeen(passage.title);

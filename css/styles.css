@@ -254,6 +254,28 @@ body {
     margin-top: 0.15rem;
 }
 
+.stat-quit {
+    margin-left: auto;
+}
+
+.btn-quit {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    color: var(--ink-faded);
+    background: transparent;
+    border: 1px solid var(--parchment-edge);
+    padding: 0.35rem 0.85rem;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-quit:hover {
+    color: var(--accent-red-soft);
+    border-color: var(--accent-red-soft);
+}
+
 /* === RESULTS SCREEN === */
 .results {
     display: none;
