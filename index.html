@@ -37,36 +37,50 @@
             <p class="start-description">
                 Type your way through the defining moments of a turbulent age &mdash;
                 from the dawn of flight to the atomic era. Each passage teaches
-                as you type. Choose an era or type them all.
+                as you type.
             </p>
+
+            <div class="mode-toggle">
+                <button class="btn btn-mode" id="btnCampaign" onclick="setGameMode('campaign')">Campaign</button>
+                <button class="btn btn-mode" id="btnFreeplay" onclick="setGameMode('freeplay')">Free Play</button>
+            </div>
+            <p class="mode-description" id="modeDescription"></p>
+
             <div class="start-era-list" id="eraList">
                 <button class="era-btn selected" onclick="selectEra('all')">
                     <span class="era-name">All Eras</span>
                     <span class="era-years">1900&ndash;1945</span>
+                    <span class="era-progress" id="eraProgress-all"></span>
                 </button>
                 <button class="era-btn" onclick="selectEra('The New Century')">
                     <span class="era-name">The New Century</span>
                     <span class="era-years">1900&ndash;1913</span>
+                    <span class="era-progress" id="eraProgress-0"></span>
                 </button>
                 <button class="era-btn" onclick="selectEra('The Great War')">
                     <span class="era-name">The Great War</span>
                     <span class="era-years">1914&ndash;1918</span>
+                    <span class="era-progress" id="eraProgress-1"></span>
                 </button>
                 <button class="era-btn" onclick="selectEra('The Roaring Twenties')">
                     <span class="era-name">The Roaring Twenties</span>
                     <span class="era-years">1919&ndash;1929</span>
+                    <span class="era-progress" id="eraProgress-2"></span>
                 </button>
                 <button class="era-btn" onclick="selectEra('The Great Depression')">
                     <span class="era-name">The Great Depression</span>
                     <span class="era-years">1929&ndash;1939</span>
+                    <span class="era-progress" id="eraProgress-3"></span>
                 </button>
                 <button class="era-btn" onclick="selectEra('The World at War Again')">
                     <span class="era-name">The World at War Again</span>
                     <span class="era-years">1939&ndash;1945</span>
+                    <span class="era-progress" id="eraProgress-4"></span>
                 </button>
             </div>
+            <div class="home-score" id="homeScore" style="display:none;"></div>
             <button class="btn btn-primary" onclick="startTyping()">Begin Typing</button>
-            <div class="version">v0.6.0</div>
+            <div class="version">v1.0.0</div>
         </div>
 
         <!-- ===== STATS DASHBOARD ===== -->
@@ -75,10 +89,14 @@
             <h2 class="start-title">Your Progress</h2>
             <div class="results-ornament">&mdash; &#10022; &mdash;</div>
 
-            <div class="results-stats" style="margin-bottom: 2rem;">
+            <div class="results-stats" style="margin-bottom: 1.5rem;">
+                <div class="result-stat">
+                    <span class="result-stat-value" id="statsTotalScore">0</span>
+                    <span class="result-stat-label">Total Score</span>
+                </div>
                 <div class="result-stat">
                     <span class="result-stat-value" id="statsTotalPassages">0</span>
-                    <span class="result-stat-label">Completed</span>
+                    <span class="result-stat-label">Earned</span>
                 </div>
                 <div class="result-stat">
                     <span class="result-stat-value" id="statsBestWpm">0</span>
@@ -92,6 +110,11 @@
                     <span class="result-stat-value" id="statsAvgAccuracy">0%</span>
                     <span class="result-stat-label">Avg Accuracy</span>
                 </div>
+            </div>
+
+            <div class="stats-era-section">
+                <h3 class="stats-chart-title">Era Progress</h3>
+                <div id="statsEraProgress"></div>
             </div>
 
             <div class="stats-chart-section">
@@ -159,6 +182,8 @@
                 <h3 class="results-title">Passage Complete</h3>
                 <div class="results-ornament">&mdash; &#10022; &mdash;</div>
                 <div class="results-rating" id="resultsRating"></div>
+                <div class="result-score" id="finalScore"></div>
+                <div class="passage-earned-msg" id="passageEarnedMsg"></div>
                 <div class="results-stats">
                     <div class="result-stat">
                         <span class="result-stat-value" id="finalWpm">0</span>
