@@ -139,6 +139,93 @@ body {
     font-size: 0.9rem;
 }
 
+/* === PASSAGE DIFFICULTY BADGE === */
+.passage-difficulty {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    text-transform: uppercase;
+}
+
+.difficulty-easy {
+    color: var(--correct-green);
+    border: 1px solid var(--correct-green);
+    background: rgba(45, 90, 30, 0.06);
+}
+
+.difficulty-moderate {
+    color: var(--accent-gold);
+    border: 1px solid var(--accent-gold);
+    background: rgba(184, 134, 11, 0.06);
+}
+
+.difficulty-challenging {
+    color: var(--accent-red-soft);
+    border: 1px solid var(--accent-red-soft);
+    background: rgba(139, 37, 0, 0.06);
+}
+
+/* === TROUBLE SPOTS === */
+.stats-trouble-section {
+    margin-bottom: 1.5rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.trouble-spots-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.trouble-char {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.4rem 0.6rem;
+    border-radius: 4px;
+    border: 1px solid var(--parchment-edge);
+    min-width: 3rem;
+    transition: all 0.3s;
+}
+
+.trouble-char.trouble-high {
+    border-color: var(--accent-red-soft);
+    background: rgba(139, 37, 0, 0.06);
+}
+
+.trouble-char.trouble-medium {
+    border-color: var(--accent-gold);
+    background: rgba(184, 134, 11, 0.06);
+}
+
+.trouble-char-key {
+    font-family: 'Special Elite', monospace;
+    font-size: 1.2rem;
+    color: var(--ink-dark);
+    line-height: 1;
+}
+
+.trouble-char-rate {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.6rem;
+    color: var(--ink-faded);
+    margin-top: 0.15rem;
+}
+
+.trouble-hint {
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 0.85rem;
+    color: var(--ink-faded);
+    font-style: italic;
+    margin-top: 0.75rem;
+}
+
 /* === PASSAGE INFO BAR === */
 .passage-info {
     display: flex;

@@ -82,7 +82,7 @@
             </div>
             <div class="home-score" id="homeScore" style="display:none;"></div>
             <button class="btn btn-primary" onclick="startTyping()">Begin Typing</button>
-            <div class="version">v1.1.0</div>
+            <div class="version">v1.2.0</div>
         </div>
 
         <!-- ===== STATS DASHBOARD ===== -->
@@ -117,6 +117,13 @@
             <div class="stats-era-section">
                 <h3 class="stats-chart-title">Era Progress</h3>
                 <div id="statsEraProgress"></div>
+            </div>
+
+            <div class="stats-trouble-section">
+                <h3 class="stats-chart-title">Trouble Spots</h3>
+                <div id="statsTroubleSpots">
+                    <div class="stats-chart-empty">Type a few passages to reveal your trouble spots.</div>
+                </div>
             </div>
 
             <div class="stats-chart-section">
@@ -160,6 +167,7 @@
 
             <div class="passage-info">
                 <span class="passage-era" id="passageEra"></span>
+                <span class="passage-difficulty" id="passageDifficulty"></span>
                 <span class="passage-count" id="passageCount"></span>
             </div>
 

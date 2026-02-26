@@ -153,7 +153,52 @@ function pickNextFreePlayPassage() {
         return recent.indexOf(passages[i].title) === -1;
     });
     if (unseen.length === 0) unseen = eligible;
-    return unseen[Math.floor(Math.random() * unseen.length)];
+
+    // Weakness-aware weighting
+    var weakChars = getWeakCharacters(15);
+    var stats = getSessionHistory();
+    var avgWpm = 0;
+    if (stats.length > 0) {
+        var sum = 0;
+        var count = Math.min(stats.length, 10);
+        for (var s = stats.length - count; s < stats.length; s++) {
+            sum += (stats[s].wpm || 0);
+        }
+        avgWpm = sum / count;
+    }
+
+    if (weakChars.length === 0 && avgWpm < 20) {
+        // No data yet — pure random
+        return unseen[Math.floor(Math.random() * unseen.length)];
+    }
+
+    // Score each eligible passage
+    var scored = [];
+    for (var j = 0; j < unseen.length; j++) {
+        var idx = unseen[j];
+        var weakScore = getPassageWeaknessScore(idx);
+        var diff = calculatePassageDifficulty(passages[idx].text);
+
+        // Adaptive: prefer harder passages as WPM rises
+        var diffBonus = 0;
+        if (avgWpm >= 50) diffBonus = diff.score * 0.5;
+        else if (avgWpm >= 35) diffBonus = diff.score * 0.25;
+
+        var total = 1 + weakScore * 10 + diffBonus;
+        scored.push({ index: idx, weight: total });
+    }
+
+    // Weighted random selection
+    var totalWeight = 0;
+    for (var k = 0; k < scored.length; k++) totalWeight += scored[k].weight;
+
+    var roll = Math.random() * totalWeight;
+    var cumulative = 0;
+    for (var m = 0; m < scored.length; m++) {
+        cumulative += scored[m].weight;
+        if (roll <= cumulative) return scored[m].index;
+    }
+    return scored[scored.length - 1].index;
 }
 
 // --- Game mode ---
@@ -213,6 +258,109 @@ function addToTotalScore(points) {
     return total;
 }
 
+// ===================================================================
+// TYPING INTELLIGENCE
+// ===================================================================
+var CHAR_STATS_KEY = 'typethrough-char-stats';
+
+// Per-session tracking (reset each passage)
+var sessionCharErrors = {}; // { char: errorCount }
+var sessionCharAttempts = {}; // { char: attemptCount }
+
+function getCharStats() {
+    try {
+        var stored = localStorage.getItem(CHAR_STATS_KEY);
+        return stored ? JSON.parse(stored) : { errors: {}, attempts: {} };
+    } catch(e) { return { errors: {}, attempts: {} }; }
+}
+
+function saveCharStats(charErrors, charAttempts) {
+    var stats = getCharStats();
+    for (var ch in charErrors) {
+        stats.errors[ch] = (stats.errors[ch] || 0) + charErrors[ch];
+    }
+    for (var ch2 in charAttempts) {
+        stats.attempts[ch2] = (stats.attempts[ch2] || 0) + charAttempts[ch2];
+    }
+    try { localStorage.setItem(CHAR_STATS_KEY, JSON.stringify(stats)); } catch(e) {}
+}
+
+function getWeakCharacters(topN) {
+    var stats = getCharStats();
+    var rates = [];
+    for (var ch in stats.attempts) {
+        if (stats.attempts[ch] >= 5) { // minimum sample size
+            var errorRate = (stats.errors[ch] || 0) / stats.attempts[ch];
+            if (errorRate > 0.05) { // only show chars with >5% error rate
+                rates.push({ char: ch, rate: errorRate, attempts: stats.attempts[ch] });
+            }
+        }
+    }
+    rates.sort(function(a, b) { return b.rate - a.rate; });
+    return rates.slice(0, topN || 10);
+}
+
+// --- Passage difficulty ---
+function calculatePassageDifficulty(text) {
+    var length = text.length;
+    if (length === 0) return { score: 0, label: 'Easy', css: 'difficulty-easy' };
+
+    var numbers = 0;
+    var punctuation = 0;
+    var uppercase = 0;
+    var special = 0;
+
+    for (var i = 0; i < text.length; i++) {
+        var c = text[i];
+        if (c >= '0' && c <= '9') numbers++;
+        else if (',.:;!?\'"()'.indexOf(c) !== -1) punctuation++;
+        else if (c === c.toUpperCase() && c !== c.toLowerCase()) uppercase++;
+        if ('\u2014\u2013\u00e9\u00b2'.indexOf(c) !== -1) special++;
+    }
+
+    // Calculate density scores (percentage of text)
+    var numberDensity = numbers / length;
+    var punctDensity = punctuation / length;
+    var specialDensity = special / length;
+
+    // Words and average word length
+    var words = text.split(/\s+/);
+    var avgWordLen = 0;
+    for (var w = 0; w < words.length; w++) avgWordLen += words[w].length;
+    avgWordLen = words.length > 0 ? avgWordLen / words.length : 0;
+
+    // Composite score 0-100
+    var score = Math.round(
+        (numberDensity * 200) +
+        (punctDensity * 150) +
+        (specialDensity * 300) +
+        (Math.max(0, avgWordLen - 4) * 5) +
+        (length > 400 ? 10 : 0) +
+        (length > 600 ? 10 : 0)
+    );
+    score = Math.min(100, score);
+
+    if (score >= 40) return { score: score, label: 'Challenging', css: 'difficulty-challenging' };
+    if (score >= 20) return { score: score, label: 'Moderate', css: 'difficulty-moderate' };
+    return { score: score, label: 'Easy', css: 'difficulty-easy' };
+}
+
+// --- Weakness-aware passage scoring ---
+function getPassageWeaknessScore(passageIndex) {
+    var weakChars = getWeakCharacters(15);
+    if (weakChars.length === 0) return 0;
+
+    var text = passages[passageIndex].text.toLowerCase();
+    var score = 0;
+
+    for (var w = 0; w < weakChars.length; w++) {
+        var ch = weakChars[w].char.toLowerCase();
+        for (var i = 0; i < text.length; i++) {
+            if (text[i] === ch) score += weakChars[w].rate;
+        }
+    }
+    return score;
+}
 // ===================================================================
 // APP STATE
 // ===================================================================
@@ -379,11 +527,21 @@ function loadPassage(index) {
     isComplete = false;
     bellPlayedForLine = -1;
     carriagePlayedAtIndex = -1;
+    sessionCharErrors = {};
+    sessionCharAttempts = {};
     if (statsInterval) clearInterval(statsInterval);
 
     // Update UI
     passageTitle.textContent = passage.title;
     passageEra.textContent = passage.era;
+
+    // Difficulty badge
+    var diffEl = document.getElementById('passageDifficulty');
+    if (diffEl) {
+        var diff = calculatePassageDifficulty(passage.text);
+        diffEl.textContent = diff.label;
+        diffEl.className = 'passage-difficulty ' + diff.css;
+    }
 
     // Passage count — show campaign progress or remaining
     if (gameMode === 'campaign' && selectedEra !== 'all') {
@@ -487,7 +645,13 @@ typingInput.addEventListener('input', function(e) {
             chars[currentCharIndex].classList.remove('current');
             chars[currentCharIndex].classList.add('incorrect');
             errors++;
+            // Track character error
+            var errKey = expectedChar === ' ' ? 'SPACE' : expectedChar;
+            sessionCharErrors[errKey] = (sessionCharErrors[errKey] || 0) + 1;
         }
+        // Track character attempt
+        var attemptKey = expectedChar === ' ' ? 'SPACE' : expectedChar;
+        sessionCharAttempts[attemptKey] = (sessionCharAttempts[attemptKey] || 0) + 1;
 
         // --- Typewriter line-awareness ---
         var bellDistance = 7;
@@ -643,6 +807,7 @@ function completePassage() {
 
     // Save stats
     saveSessionStats(passage.title, passage.era, wpm, accuracy, errors, score, earned);
+    saveCharStats(sessionCharErrors, sessionCharAttempts);
 
     // Add score
     if (earned) {
@@ -732,6 +897,7 @@ function clearStats() {
             for (var key in STORAGE_KEYS) {
                 localStorage.removeItem(STORAGE_KEYS[key]);
             }
+            localStorage.removeItem(CHAR_STATS_KEY);
         } catch(e) {}
         renderStats();
         updateEraProgress();
@@ -831,6 +997,45 @@ function renderStats() {
         eraHtml += '</div>';
     }
     document.getElementById('statsEraProgress').innerHTML = eraHtml;
+
+    // Trouble spots
+    renderTroubleSpots();
+}
+
+function renderTroubleSpots() {
+    var container = document.getElementById('statsTroubleSpots');
+    var weakChars = getWeakCharacters(10);
+
+    if (weakChars.length === 0) {
+        // Check if we have any data at all
+        var stats = getCharStats();
+        var hasData = false;
+        for (var key in stats.attempts) { hasData = true; break; }
+
+        if (!hasData) {
+            container.innerHTML = '<div class="stats-chart-empty">Type a few passages to reveal your trouble spots.</div>';
+        } else {
+            container.innerHTML = '<div class="stats-chart-empty">No significant weak spots detected — nice work!</div>';
+        }
+        return;
+    }
+
+    var html = '<div class="trouble-spots-row">';
+    for (var i = 0; i < weakChars.length; i++) {
+        var wc = weakChars[i];
+        var pct = Math.round(wc.rate * 100);
+        var severity = pct >= 20 ? 'trouble-high' : 'trouble-medium';
+        var displayChar = wc.char;
+        if (displayChar === 'SPACE') displayChar = '⎵';
+
+        html += '<div class="trouble-char ' + severity + '">';
+        html += '<span class="trouble-char-key">' + displayChar + '</span>';
+        html += '<span class="trouble-char-rate">' + pct + '% miss</span>';
+        html += '</div>';
+    }
+    html += '</div>';
+    html += '<p class="trouble-hint">Free Play will favor passages that exercise your weak characters.</p>';
+    container.innerHTML = html;
 }
 
 function formatDate(isoString) {
