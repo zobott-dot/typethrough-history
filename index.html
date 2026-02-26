@@ -26,6 +26,8 @@
         <nav class="site-nav" id="siteNav">
             <span class="nav-link" id="navHome" onclick="goHome()">Home</span>
             <span class="nav-separator">&#183;</span>
+            <span class="nav-link" id="navJourney" onclick="navigateToJourney()">The Journey</span>
+            <span class="nav-separator">&#183;</span>
             <span class="nav-link" id="navStats" onclick="navigateToStats()">My Progress</span>
         </nav>
 
@@ -80,7 +82,7 @@
             </div>
             <div class="home-score" id="homeScore" style="display:none;"></div>
             <button class="btn btn-primary" onclick="startTyping()">Begin Typing</button>
-            <div class="version">v1.0.0</div>
+            <div class="version">v1.1.0</div>
         </div>
 
         <!-- ===== STATS DASHBOARD ===== -->
@@ -133,6 +135,23 @@
 
             <div class="button-row" style="margin-top: 1.5rem;">
                 <button class="btn" onclick="clearStats()">Clear History</button>
+            </div>
+        </div>
+
+        <!-- ===== THE JOURNEY ===== -->
+        <div class="journey-screen" id="journeyScreen">
+            <div class="ornament">&#10087; &#10022; &#10087;</div>
+            <h2 class="start-title">The Journey</h2>
+            <p class="journey-subtitle">1900 &mdash; 1945</p>
+
+            <div class="journey-score" id="journeyScore"></div>
+
+            <div class="journey-timeline" id="journeyTimeline">
+                <!-- Rendered by JS -->
+            </div>
+
+            <div class="journey-milestones" id="journeyMilestones">
+                <!-- Rendered by JS -->
             </div>
         </div>
 

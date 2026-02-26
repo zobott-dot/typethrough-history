@@ -251,17 +251,21 @@ var footnoteText = document.getElementById('footnoteText');
 var nextBtn = document.getElementById('nextBtn');
 var progressBar = document.getElementById('progressBar');
 var statsScreen = document.getElementById('statsScreen');
+var journeyScreen = document.getElementById('journeyScreen');
 
 // ===================================================================
 // NAVIGATION
 // ===================================================================
 var navHome = document.getElementById('navHome');
+var navJourney = document.getElementById('navJourney');
 var navStats = document.getElementById('navStats');
 
 function updateNav(activePage) {
     navHome.classList.remove('nav-active');
+    navJourney.classList.remove('nav-active');
     navStats.classList.remove('nav-active');
     if (activePage === 'home') navHome.classList.add('nav-active');
+    if (activePage === 'journey') navJourney.classList.add('nav-active');
     if (activePage === 'stats') navStats.classList.add('nav-active');
 }
 updateNav('home');
@@ -271,6 +275,7 @@ function hideAllScreens() {
     startScreen.style.display = 'none';
     typingScreen.classList.remove('visible');
     statsScreen.classList.remove('visible');
+    journeyScreen.classList.remove('visible');
     isComplete = false;
 }
 
@@ -288,6 +293,13 @@ function navigateToStats() {
     statsScreen.classList.add('visible');
     updateNav('stats');
     renderStats();
+}
+
+function navigateToJourney() {
+    hideAllScreens();
+    journeyScreen.classList.add('visible');
+    updateNav('journey');
+    renderJourney();
 }
 
 // ===================================================================
@@ -827,6 +839,116 @@ function formatDate(isoString) {
         var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
         return months[d.getMonth()] + ' ' + d.getDate();
     } catch(e) { return ''; }
+}
+
+// ===================================================================
+// THE JOURNEY
+// ===================================================================
+var MILESTONES = [
+    { id: 'first', name: 'First Steps', desc: 'Earn your first passage', icon: '\u270E', threshold: 1 },
+    { id: 'ten', name: 'Finding a Rhythm', desc: 'Earn 10 passages', icon: '\u2606', threshold: 10 },
+    { id: 'quarter', name: 'A Quarter Century', desc: 'Earn 25 passages', icon: '\u2605', threshold: 25 },
+    { id: 'half', name: 'Half the Century', desc: 'Earn half the campaign', icon: '\u2736', threshold: 0 },
+    { id: 'all', name: 'Century Mastered', desc: 'Earn every campaign passage', icon: '\u2741', threshold: 0 }
+];
+
+(function setMilestoneThresholds() {
+    var totalCampaign = 0;
+    for (var e = 0; e < CAMPAIGN_ERAS.length; e++) {
+        totalCampaign += getEraTotalCount(CAMPAIGN_ERAS[e]);
+    }
+    for (var m = 0; m < MILESTONES.length; m++) {
+        if (MILESTONES[m].id === 'half') MILESTONES[m].threshold = Math.ceil(totalCampaign / 2);
+        if (MILESTONES[m].id === 'all') MILESTONES[m].threshold = totalCampaign;
+    }
+})();
+
+function getTotalEarned() {
+    var total = 0;
+    for (var e = 0; e < CAMPAIGN_ERAS.length; e++) {
+        total += getEraCompletionCount(CAMPAIGN_ERAS[e]);
+    }
+    return total;
+}
+
+function renderJourney() {
+    var progress = getCampaignProgress();
+    var totalEarned = getTotalEarned();
+
+    // Score
+    var scoreEl = document.getElementById('journeyScore');
+    var total = getTotalScore();
+    scoreEl.textContent = total > 0 ? total.toLocaleString() + ' points' : '';
+
+    // Timeline
+    var timelineEl = document.getElementById('journeyTimeline');
+    var html = '';
+
+    for (var e = 0; e < CAMPAIGN_ERAS.length; e++) {
+        var eraName = CAMPAIGN_ERAS[e];
+        var eraIndices = passagesByEra[eraName] || [];
+        var earned = progress[eraName] || [];
+        var eraComplete = earned.length >= eraIndices.length && eraIndices.length > 0;
+
+        // Era year ranges
+        var yearRanges = ['1900\u20131913', '1914\u20131918', '1919\u20131929', '1929\u20131939', '1939\u20131945'];
+
+        html += '<div class="journey-era">';
+        html += '<div class="journey-era-header">';
+        html += '<span class="journey-era-name">' + eraName + '</span>';
+        html += '<span class="journey-era-years">' + yearRanges[e] + '</span>';
+        html += '<span class="journey-era-line"></span>';
+        html += '<span class="journey-era-status ' + (eraComplete ? 'era-done' : '') + '">';
+        html += eraComplete ? '\u2713 Complete' : earned.length + ' / ' + eraIndices.length;
+        html += '</span>';
+        html += '</div>';
+
+        html += '<div class="journey-passages">';
+        for (var p = 0; p < eraIndices.length; p++) {
+            var passage = passages[eraIndices[p]];
+            var isEarned = earned.indexOf(passage.title) !== -1;
+            html += '<div class="journey-dot ' + (isEarned ? 'earned' : '') + '">';
+            html += '<span class="dot-tooltip">' + passage.title + '</span>';
+            if (!isEarned) {
+                html += (p + 1);
+            }
+            html += '</div>';
+        }
+        html += '</div>';
+        html += '</div>';
+    }
+
+    timelineEl.innerHTML = html;
+
+    // Milestones
+    var milestonesEl = document.getElementById('journeyMilestones');
+    var mHtml = '<h3 class="journey-milestones-title">Milestones</h3>';
+    mHtml += '<div class="journey-milestone-list">';
+
+    // Add era completion milestones
+    for (var f = 0; f < CAMPAIGN_ERAS.length; f++) {
+        var eName = CAMPAIGN_ERAS[f];
+        var eIndices = passagesByEra[eName] || [];
+        var eEarned = progress[eName] || [];
+        var done = eEarned.length >= eIndices.length && eIndices.length > 0;
+        mHtml += '<div class="journey-milestone ' + (done ? 'achieved' : '') + '">';
+        mHtml += '<span class="journey-milestone-icon">' + (done ? '\u2713' : '\u25CB') + '</span>';
+        mHtml += eName;
+        mHtml += '</div>';
+    }
+
+    // Add general milestones
+    for (var g = 0; g < MILESTONES.length; g++) {
+        var ms = MILESTONES[g];
+        var achieved = totalEarned >= ms.threshold;
+        mHtml += '<div class="journey-milestone ' + (achieved ? 'achieved' : '') + '">';
+        mHtml += '<span class="journey-milestone-icon">' + ms.icon + '</span>';
+        mHtml += ms.name;
+        mHtml += '</div>';
+    }
+
+    mHtml += '</div>';
+    milestonesEl.innerHTML = mHtml;
 }
 
 // ===================================================================
