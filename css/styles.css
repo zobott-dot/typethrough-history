@@ -139,6 +139,230 @@ body {
     font-size: 0.9rem;
 }
 
+/* === FOCUS MODE === */
+.typing-screen.focus-active .passage-info {
+    opacity: 0;
+    transition: opacity 0.6s ease-out;
+    pointer-events: none;
+}
+
+.typing-screen.focus-active .passage-title {
+    opacity: 0.3;
+    transition: opacity 0.6s ease-out;
+    font-size: 0.9rem;
+}
+
+.typing-screen.focus-active .click-prompt {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.typing-screen.focus-active .live-stats {
+    opacity: 0.35;
+    transition: opacity 0.6s ease-out;
+}
+
+.typing-screen.focus-active .live-stats:hover {
+    opacity: 1;
+}
+
+.typing-screen.focus-active .progress-bar-container {
+    opacity: 0.7;
+}
+
+/* Restore everything on completion */
+.typing-screen .passage-info,
+.typing-screen .passage-title,
+.typing-screen .live-stats,
+.typing-screen .progress-bar-container {
+    transition: opacity 0.4s ease-in;
+}
+
+/* Auto-scroll: constrain passage display height */
+.passage-display {
+    max-height: 50vh;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    padding-right: 0.25rem;
+}
+
+/* Subtle scrollbar */
+.passage-display::-webkit-scrollbar {
+    width: 4px;
+}
+
+.passage-display::-webkit-scrollbar-thumb {
+    background: var(--parchment-edge);
+    border-radius: 2px;
+}
+
+/* === TYPING MODE TOGGLE === */
+.typing-mode-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 0.75rem 0 1.25rem;
+    flex-wrap: wrap;
+}
+
+.typing-mode-label {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.8rem;
+    color: var(--ink-faded);
+}
+
+.btn-small {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+}
+
+.typing-mode-hint {
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 0.8rem;
+    color: var(--ink-faded);
+    font-style: italic;
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin-top: 0.25rem;
+}
+
+.typing-mode-indicator {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.65rem;
+    color: var(--ink-faded);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+/* === TYPING TIPS SCREEN === */
+.tips-screen {
+    display: none;
+    text-align: center;
+    padding: 1.5rem 0;
+}
+
+.tips-screen.visible {
+    display: block;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.tips-content {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.tips-section {
+    margin-bottom: 1.75rem;
+}
+
+.tips-heading {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 1.1rem;
+    color: var(--ink-dark);
+    margin-bottom: 0.5rem;
+}
+
+.tips-text {
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 1rem;
+    color: var(--ink-medium);
+    line-height: 1.6;
+}
+
+/* Keyboard diagram */
+.keyboard-diagram {
+    margin: 1rem auto;
+    max-width: 400px;
+    text-align: center;
+}
+
+.kb-row {
+    display: flex;
+    justify-content: center;
+    gap: 3px;
+    margin-bottom: 3px;
+}
+
+.kb-key {
+    width: 2.2rem;
+    height: 2.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Special Elite', monospace;
+    font-size: 0.8rem;
+    color: var(--ink-medium);
+    background: var(--parchment-light);
+    border: 1px solid var(--parchment-edge);
+    border-radius: 3px;
+    transition: all 0.3s;
+}
+
+.kb-key.kb-home {
+    border-width: 2px;
+    font-weight: bold;
+    color: var(--ink-dark);
+}
+
+.kb-key.kb-left-pinky, .kb-key.kb-right-pinky {
+    background: rgba(184, 134, 11, 0.12);
+    border-color: rgba(184, 134, 11, 0.4);
+}
+
+.kb-key.kb-left-ring, .kb-key.kb-right-ring {
+    background: rgba(45, 90, 30, 0.10);
+    border-color: rgba(45, 90, 30, 0.4);
+}
+
+.kb-key.kb-left-middle, .kb-key.kb-right-middle {
+    background: rgba(100, 60, 30, 0.10);
+    border-color: rgba(100, 60, 30, 0.4);
+}
+
+.kb-key.kb-left-index, .kb-key.kb-right-index {
+    background: rgba(139, 37, 0, 0.10);
+    border-color: rgba(139, 37, 0, 0.4);
+}
+
+.kb-key.kb-space {
+    width: 100%;
+    max-width: 250px;
+    font-size: 0.7rem;
+    color: var(--ink-faded);
+}
+
+.kb-legend {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.kb-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 0.75rem;
+    color: var(--ink-faded);
+}
+
+.kb-swatch {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+}
+
+.kb-swatch.kb-left-pinky { background: rgba(184, 134, 11, 0.25); }
+.kb-swatch.kb-left-ring { background: rgba(45, 90, 30, 0.25); }
+.kb-swatch.kb-left-middle { background: rgba(100, 60, 30, 0.25); }
+.kb-swatch.kb-left-index { background: rgba(139, 37, 0, 0.25); }
+
 /* === PASSAGE DIFFICULTY BADGE === */
 .passage-difficulty {
     font-family: 'Special Elite', monospace;

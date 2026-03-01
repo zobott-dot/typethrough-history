@@ -11,7 +11,8 @@ var STORAGE_KEYS = {
     sessionStats: 'typethrough-session-stats',
     campaignProgress: 'typethrough-campaign-progress',
     totalScore: 'typethrough-total-score',
-    gameMode: 'typethrough-game-mode'
+    gameMode: 'typethrough-game-mode',
+    typingMode: 'typethrough-typing-mode'
 };
 var maxStoredSessions = 100;
 
@@ -26,6 +27,7 @@ var CAMPAIGN_ERAS = [
 
 var selectedEra = 'all';
 var gameMode = loadGameMode(); // 'campaign' or 'freeplay'
+var typingMode = loadTypingMode(); // 'correction' or 'flow'
 
 // ===================================================================
 // PASSAGE MANAGEMENT
@@ -231,6 +233,38 @@ function setGameMode(mode) {
     }
 }
 
+// --- Typing mode (correction vs flow) ---
+function loadTypingMode() {
+    try {
+        var stored = localStorage.getItem(STORAGE_KEYS.typingMode);
+        return stored === 'flow' ? 'flow' : 'correction';
+    } catch(e) { return 'correction'; }
+}
+
+function setTypingMode(mode) {
+    typingMode = mode;
+    try { localStorage.setItem(STORAGE_KEYS.typingMode, mode); } catch(e) {}
+    var btnCorrection = document.getElementById('btnCorrection');
+    var btnFlow = document.getElementById('btnFlow');
+    if (btnCorrection && btnFlow) {
+        btnCorrection.classList.toggle('btn-primary', mode === 'correction');
+        btnCorrection.classList.toggle('btn-secondary', mode !== 'correction');
+        btnFlow.classList.toggle('btn-primary', mode === 'flow');
+        btnFlow.classList.toggle('btn-secondary', mode !== 'flow');
+    }
+    var hint = document.getElementById('typingModeHint');
+    if (hint) {
+        hint.textContent = mode === 'flow'
+            ? 'No backspace — push through mistakes to build muscle memory.'
+            : 'Backspace allowed — fix errors as you go.';
+    }
+    // Update indicator on typing screen
+    var indicator = document.getElementById('typingModeIndicator');
+    if (indicator) {
+        indicator.textContent = mode === 'flow' ? 'Flow mode' : '';
+    }
+}
+
 // ===================================================================
 // SCORING
 // ===================================================================
@@ -400,6 +434,7 @@ var nextBtn = document.getElementById('nextBtn');
 var progressBar = document.getElementById('progressBar');
 var statsScreen = document.getElementById('statsScreen');
 var journeyScreen = document.getElementById('journeyScreen');
+var tipsScreen = document.getElementById('tipsScreen');
 
 // ===================================================================
 // NAVIGATION
@@ -407,14 +442,17 @@ var journeyScreen = document.getElementById('journeyScreen');
 var navHome = document.getElementById('navHome');
 var navJourney = document.getElementById('navJourney');
 var navStats = document.getElementById('navStats');
+var navTips = document.getElementById('navTips');
 
 function updateNav(activePage) {
     navHome.classList.remove('nav-active');
     navJourney.classList.remove('nav-active');
     navStats.classList.remove('nav-active');
+    navTips.classList.remove('nav-active');
     if (activePage === 'home') navHome.classList.add('nav-active');
     if (activePage === 'journey') navJourney.classList.add('nav-active');
     if (activePage === 'stats') navStats.classList.add('nav-active');
+    if (activePage === 'tips') navTips.classList.add('nav-active');
 }
 updateNav('home');
 
@@ -424,6 +462,7 @@ function hideAllScreens() {
     typingScreen.classList.remove('visible');
     statsScreen.classList.remove('visible');
     journeyScreen.classList.remove('visible');
+    tipsScreen.classList.remove('visible');
     isComplete = false;
 }
 
@@ -448,6 +487,12 @@ function navigateToJourney() {
     journeyScreen.classList.add('visible');
     updateNav('journey');
     renderJourney();
+}
+
+function navigateToTips() {
+    hideAllScreens();
+    tipsScreen.classList.add('visible');
+    updateNav('tips');
 }
 
 // ===================================================================
@@ -530,6 +575,7 @@ function loadPassage(index) {
     sessionCharErrors = {};
     sessionCharAttempts = {};
     if (statsInterval) clearInterval(statsInterval);
+    typingScreen.classList.remove('focus-active');
 
     // Update UI
     passageTitle.textContent = passage.title;
@@ -541,6 +587,12 @@ function loadPassage(index) {
         var diff = calculatePassageDifficulty(passage.text);
         diffEl.textContent = diff.label;
         diffEl.className = 'passage-difficulty ' + diff.css;
+    }
+
+    // Typing mode indicator
+    var indicator = document.getElementById('typingModeIndicator');
+    if (indicator) {
+        indicator.textContent = typingMode === 'flow' ? 'Flow mode' : '';
     }
 
     // Passage count — show campaign progress or remaining
@@ -555,6 +607,7 @@ function loadPassage(index) {
 
     // Render characters
     passageDisplay.innerHTML = '';
+    passageDisplay.scrollTop = 0;
     for (var i = 0; i < passage.text.length; i++) {
         var span = document.createElement('span');
         span.className = 'char' + (i === 0 ? ' current' : '');
@@ -629,6 +682,8 @@ typingInput.addEventListener('input', function(e) {
     if (!startTime) {
         startTime = new Date();
         statsInterval = setInterval(updateLiveStats, 200);
+        // Focus Mode: fade non-essential UI
+        typingScreen.classList.add('focus-active');
     }
 
     var inputVal = typingInput.value;
@@ -692,6 +747,8 @@ typingInput.addEventListener('input', function(e) {
 
         if (currentCharIndex < passage.text.length) {
             chars[currentCharIndex].classList.add('current');
+            // Auto-scroll: keep current character visible
+            autoScrollToCurrentChar(chars[currentCharIndex]);
         }
 
         if (currentCharIndex >= passage.text.length) {
@@ -706,6 +763,8 @@ typingInput.addEventListener('input', function(e) {
 typingInput.addEventListener('keydown', function(e) {
     if (e.key === 'Backspace') {
         e.preventDefault();
+        // Flow mode: no backspace allowed
+        if (typingMode === 'flow') return;
         if (currentCharIndex > 0 && !isComplete) {
             playSound('backspace');
             currentCharIndex--;
@@ -724,12 +783,32 @@ typingInput.addEventListener('keydown', function(e) {
 
             chars[currentCharIndex].classList.remove('correct', 'incorrect');
             chars[currentCharIndex].classList.add('current');
+            // Auto-scroll back
+            autoScrollToCurrentChar(chars[currentCharIndex]);
         }
     }
     if (e.key === 'Tab') {
         e.preventDefault();
     }
 });
+
+// ===================================================================
+// AUTO-SCROLL
+// ===================================================================
+function autoScrollToCurrentChar(charEl) {
+    if (!charEl || !passageDisplay) return;
+    var containerRect = passageDisplay.getBoundingClientRect();
+    var charRect = charEl.getBoundingClientRect();
+
+    // If the character is below the visible area, scroll down
+    if (charRect.bottom > containerRect.bottom - 20) {
+        passageDisplay.scrollTop += charRect.bottom - containerRect.bottom + 40;
+    }
+    // If the character is above the visible area, scroll up
+    if (charRect.top < containerRect.top + 20) {
+        passageDisplay.scrollTop -= containerRect.top - charRect.top + 40;
+    }
+}
 
 // ===================================================================
 // STATS CALCULATION
@@ -789,6 +868,8 @@ function completePassage() {
     if (statsInterval) clearInterval(statsInterval);
     playSound('complete');
     progressBar.style.width = '100%';
+    // Restore full UI from focus mode
+    typingScreen.classList.remove('focus-active');
 
     var passage = passages[currentPassageIndex];
     var wpm = calculateWPM();
@@ -1161,6 +1242,7 @@ function renderJourney() {
 // ===================================================================
 (function init() {
     setGameMode(gameMode);
+    setTypingMode(typingMode);
     updateEraProgress();
     updateHomeScore();
 })();

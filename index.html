@@ -29,6 +29,8 @@
             <span class="nav-link" id="navJourney" onclick="navigateToJourney()">The Journey</span>
             <span class="nav-separator">&#183;</span>
             <span class="nav-link" id="navStats" onclick="navigateToStats()">My Progress</span>
+            <span class="nav-separator">&#183;</span>
+            <span class="nav-link" id="navTips" onclick="navigateToTips()">Typing Tips</span>
         </nav>
 
         <!-- ===== START SCREEN ===== -->
@@ -47,6 +49,13 @@
                 <button class="btn btn-mode" id="btnFreeplay" onclick="setGameMode('freeplay')">Free Play</button>
             </div>
             <p class="mode-description" id="modeDescription"></p>
+
+            <div class="typing-mode-toggle">
+                <span class="typing-mode-label">Typing mode:</span>
+                <button class="btn btn-mode btn-small" id="btnCorrection" onclick="setTypingMode('correction')">Correction</button>
+                <button class="btn btn-mode btn-small" id="btnFlow" onclick="setTypingMode('flow')">Flow</button>
+                <span class="typing-mode-hint" id="typingModeHint"></span>
+            </div>
 
             <div class="start-era-list" id="eraList">
                 <button class="era-btn selected" onclick="selectEra('all')">
@@ -82,7 +91,7 @@
             </div>
             <div class="home-score" id="homeScore" style="display:none;"></div>
             <button class="btn btn-primary" onclick="startTyping()">Begin Typing</button>
-            <div class="version">v1.2.0</div>
+            <div class="version">v2.0.0</div>
         </div>
 
         <!-- ===== STATS DASHBOARD ===== -->
@@ -162,6 +171,60 @@
             </div>
         </div>
 
+        <!-- ===== TYPING TIPS ===== -->
+        <div class="tips-screen" id="tipsScreen">
+            <div class="ornament">&#10087; &#10022; &#10087;</div>
+            <h2 class="start-title">Typing Tips</h2>
+            <div class="results-ornament">&mdash; &#10022; &mdash;</div>
+
+            <div class="tips-content">
+                <div class="tips-section">
+                    <h3 class="tips-heading">Home Row Position</h3>
+                    <p class="tips-text">Rest your fingers on the home row &mdash; the foundation of touch typing. Your fingers should return here after every reach.</p>
+                    <div class="keyboard-diagram">
+                        <div class="kb-row">
+                            <span class="kb-key">Q</span><span class="kb-key">W</span><span class="kb-key">E</span><span class="kb-key">R</span><span class="kb-key">T</span><span class="kb-key">Y</span><span class="kb-key">U</span><span class="kb-key">I</span><span class="kb-key">O</span><span class="kb-key">P</span>
+                        </div>
+                        <div class="kb-row">
+                            <span class="kb-key kb-home kb-left-pinky">A</span><span class="kb-key kb-home kb-left-ring">S</span><span class="kb-key kb-home kb-left-middle">D</span><span class="kb-key kb-home kb-left-index">F</span><span class="kb-key">G</span><span class="kb-key">H</span><span class="kb-key kb-home kb-right-index">J</span><span class="kb-key kb-home kb-right-middle">K</span><span class="kb-key kb-home kb-right-ring">L</span><span class="kb-key kb-home kb-right-pinky">;</span>
+                        </div>
+                        <div class="kb-row">
+                            <span class="kb-key">Z</span><span class="kb-key">X</span><span class="kb-key">C</span><span class="kb-key">V</span><span class="kb-key">B</span><span class="kb-key">N</span><span class="kb-key">M</span><span class="kb-key">,</span><span class="kb-key">.</span><span class="kb-key">/</span>
+                        </div>
+                        <div class="kb-row">
+                            <span class="kb-key kb-space">Space &mdash; either thumb</span>
+                        </div>
+                        <div class="kb-legend">
+                            <span class="kb-legend-item"><span class="kb-swatch kb-left-pinky"></span> Pinky</span>
+                            <span class="kb-legend-item"><span class="kb-swatch kb-left-ring"></span> Ring</span>
+                            <span class="kb-legend-item"><span class="kb-swatch kb-left-middle"></span> Middle</span>
+                            <span class="kb-legend-item"><span class="kb-swatch kb-left-index"></span> Index</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tips-section">
+                    <h3 class="tips-heading">The Bumps on F and J</h3>
+                    <p class="tips-text">Feel for the small raised bumps on the F and J keys. These are your anchors &mdash; your index fingers live here. Every other finger finds its place relative to these two keys.</p>
+                </div>
+
+                <div class="tips-section">
+                    <h3 class="tips-heading">Don't Look Down</h3>
+                    <p class="tips-text">The hardest habit to build and the most important. Keep your eyes on the screen. You will make mistakes at first &mdash; that's the point. Your fingers learn by repetition, not by sight.</p>
+                </div>
+
+                <div class="tips-section">
+                    <h3 class="tips-heading">Correction Mode vs Flow Mode</h3>
+                    <p class="tips-text"><strong>Correction mode</strong> lets you backspace and fix errors, which builds careful habits. <strong>Flow mode</strong> disables backspace &mdash; you move forward through mistakes, which builds speed and muscle memory. Try both and see which suits your practice.</p>
+                </div>
+
+                <div class="tips-section">
+                    <h3 class="tips-heading">Accuracy First, Speed Later</h3>
+                    <p class="tips-text">Type at whatever speed lets you stay above 85% accuracy. Speed follows accuracy naturally. If you're making lots of errors, slow down &mdash; you're training your fingers to hit the wrong keys.</p>
+                </div>
+            </div>
+        </div>
+
         <!-- ===== TYPING SCREEN ===== -->
         <div class="typing-screen" id="typingScreen">
 
@@ -169,6 +232,7 @@
                 <span class="passage-era" id="passageEra"></span>
                 <span class="passage-difficulty" id="passageDifficulty"></span>
                 <span class="passage-count" id="passageCount"></span>
+                <span class="typing-mode-indicator" id="typingModeIndicator"></span>
             </div>
 
             <h3 class="passage-title" id="passageTitle"></h3>
