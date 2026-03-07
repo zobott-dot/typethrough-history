@@ -1,0 +1,21 @@
+{
+    "name": "TypeThrough History",
+    "short_name": "TypeThrough",
+    "description": "A typing tutor for the curious mind",
+    "start_url": "/typethrough-history/",
+    "display": "standalone",
+    "background_color": "#3a2f28",
+    "theme_color": "#3a2f28",
+    "icons": [
+        {
+            "src": "icons/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
