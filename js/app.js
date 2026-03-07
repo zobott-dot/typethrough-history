@@ -890,11 +890,18 @@ function completePassage() {
     saveSessionStats(passage.title, passage.era, wpm, accuracy, errors, score, earned);
     saveCharStats(sessionCharErrors, sessionCharAttempts);
 
+    // Track pre-earn state for celebration detection
+    var wasAlreadyEarned = passageEraName ? isPassageEarned(passage.title, passageEraName) : true;
+
     // Add score
     if (earned) {
         addToTotalScore(score);
         if (passageEraName) {
             markPassageEarned(passage.title, passageEraName);
+        }
+        // Track for journey dot animation
+        if (!wasAlreadyEarned) {
+            newlyEarnedPassages.push(passage.title);
         }
     }
 
@@ -937,6 +944,11 @@ function completePassage() {
 
     footnoteText.textContent = passage.footnote;
     results.classList.add('visible');
+
+    // Trigger celebrations for new achievements
+    if (earned && !wasAlreadyEarned) {
+        checkCelebrations(passageEraName, false);
+    }
 }
 
 // ===================================================================
@@ -1193,7 +1205,8 @@ function renderJourney() {
         for (var p = 0; p < eraIndices.length; p++) {
             var passage = passages[eraIndices[p]];
             var isEarned = earned.indexOf(passage.title) !== -1;
-            html += '<div class="journey-dot ' + (isEarned ? 'earned' : '') + '">';
+            var isNew = newlyEarnedPassages.indexOf(passage.title) !== -1;
+            html += '<div class="journey-dot ' + (isEarned ? 'earned' : '') + (isNew ? ' newly-earned' : '') + '">';
             html += '<span class="dot-tooltip">' + passage.title + '</span>';
             if (!isEarned) {
                 html += (p + 1);
@@ -1235,6 +1248,108 @@ function renderJourney() {
 
     mHtml += '</div>';
     milestonesEl.innerHTML = mHtml;
+
+    // Clear newly earned after rendering so pulse plays once
+    setTimeout(function() { newlyEarnedPassages = []; }, 3500);
+}
+
+// ===================================================================
+// CELEBRATIONS
+// ===================================================================
+var ERA_YEAR_MAP = {
+    'The New Century': '1900\u20131913',
+    'The Great War': '1914\u20131918',
+    'The Roaring Twenties': '1919\u20131929',
+    'The Great Depression': '1929\u20131939',
+    'The World at War Again': '1939\u20131945'
+};
+
+var pendingCelebrations = []; // queue of celebrations to show
+var newlyEarnedPassages = []; // track for journey dot animation
+
+function showEraStamp(eraName) {
+    var overlay = document.getElementById('eraStampOverlay');
+    var nameEl = document.getElementById('eraStampName');
+    var subtitleEl = document.getElementById('eraStampSubtitle');
+    nameEl.textContent = eraName;
+    subtitleEl.textContent = ERA_YEAR_MAP[eraName] || '';
+    overlay.classList.remove('fading');
+    overlay.classList.add('visible');
+
+    setTimeout(function() {
+        overlay.classList.add('fading');
+        setTimeout(function() {
+            overlay.classList.remove('visible', 'fading');
+        }, 400);
+    }, 2500);
+}
+
+function showMilestoneCelebration(milestone) {
+    var overlay = document.getElementById('milestoneOverlay');
+    var iconEl = document.getElementById('milestoneIcon');
+    var nameEl = document.getElementById('milestoneName');
+    var descEl = document.getElementById('milestoneDesc');
+    iconEl.textContent = milestone.icon;
+    nameEl.textContent = milestone.name;
+    descEl.textContent = milestone.desc;
+    overlay.classList.remove('fading');
+    overlay.classList.add('visible');
+
+    setTimeout(function() {
+        overlay.classList.add('fading');
+        setTimeout(function() {
+            overlay.classList.remove('visible', 'fading');
+            processNextCelebration();
+        }, 400);
+    }, 2500);
+}
+
+function processNextCelebration() {
+    if (pendingCelebrations.length === 0) return;
+    var next = pendingCelebrations.shift();
+    if (next.type === 'era') {
+        showEraStamp(next.eraName);
+        // After era stamp, continue queue
+        setTimeout(function() {
+            processNextCelebration();
+        }, 3200);
+    } else if (next.type === 'milestone') {
+        showMilestoneCelebration(next.milestone);
+        // processNextCelebration is called from showMilestoneCelebration's timeout
+    }
+}
+
+function checkCelebrations(passageEraName, wasEarnedBefore) {
+    pendingCelebrations = [];
+
+    if (!wasEarnedBefore) {
+        // Check era completion
+        if (passageEraName) {
+            var eraEarned = getEraCompletionCount(passageEraName);
+            var eraTotal = getEraTotalCount(passageEraName);
+            if (eraEarned >= eraTotal) {
+                pendingCelebrations.push({ type: 'era', eraName: passageEraName });
+            }
+        }
+
+        // Check milestone achievements
+        var totalEarned = getTotalEarned();
+        var prevEarned = totalEarned - 1; // we just earned one
+
+        for (var i = 0; i < MILESTONES.length; i++) {
+            var ms = MILESTONES[i];
+            if (totalEarned >= ms.threshold && prevEarned < ms.threshold) {
+                pendingCelebrations.push({ type: 'milestone', milestone: ms });
+            }
+        }
+    }
+
+    if (pendingCelebrations.length > 0) {
+        // Delay slightly to let the completion screen appear first
+        setTimeout(function() {
+            processNextCelebration();
+        }, 1200);
+    }
 }
 
 // ===================================================================

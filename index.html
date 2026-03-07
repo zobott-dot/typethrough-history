@@ -91,7 +91,7 @@
             </div>
             <div class="home-score" id="homeScore" style="display:none;"></div>
             <button class="btn btn-primary" onclick="startTyping()">Begin Typing</button>
-            <div class="version">v2.0.0</div>
+            <div class="version">v2.1.0</div>
         </div>
 
         <!-- ===== STATS DASHBOARD ===== -->
@@ -301,6 +301,26 @@
 
         </div>
     </main>
+
+    <!-- ===== CELEBRATION OVERLAYS ===== -->
+    <div class="era-stamp-overlay" id="eraStampOverlay">
+        <div class="era-stamp">
+            <div class="era-stamp-seal">
+                <span class="era-stamp-check">&#10003;</span>
+                <span class="era-stamp-label">Era Complete</span>
+            </div>
+            <div class="era-stamp-era-name" id="eraStampName"></div>
+            <div class="era-stamp-subtitle" id="eraStampSubtitle"></div>
+        </div>
+    </div>
+
+    <div class="milestone-overlay" id="milestoneOverlay">
+        <div class="milestone-celebration">
+            <div class="milestone-icon-large" id="milestoneIcon"></div>
+            <div class="milestone-celebration-name" id="milestoneName"></div>
+            <div class="milestone-celebration-desc" id="milestoneDesc"></div>
+        </div>
+    </div>
 
     <!-- Scripts loaded in order: data first, then engine, then app logic -->
     <script src="js/passages.js"></script>

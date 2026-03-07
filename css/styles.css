@@ -524,7 +524,7 @@ body {
     width: 2px;
     height: 1.1em;
     background: var(--accent-gold);
-    animation: cursorBlink 0.8s ease-in-out infinite;
+    animation: cursorPulse 0.9s ease-in-out infinite;
 }
 
 /* === HIDDEN INPUT === */
@@ -1439,6 +1439,272 @@ body {
 .journey-milestone-icon {
     font-size: 1rem;
 }
+
+/* ===================================================================
+   VISUAL POLISH — Phase 5: Textures, Animations, Celebrations
+   =================================================================== */
+
+/* === PAPER GRAIN TEXTURE === */
+.document::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url('data:image/png;base64,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');
+    background-repeat: repeat;
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 0;
+    border-radius: 2px;
+}
+
+/* Ensure content sits above the texture */
+.document > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* Aged edges vignette on the document */
+.document {
+    background:
+        radial-gradient(ellipse at center, transparent 60%, rgba(139, 100, 60, 0.08) 100%),
+        var(--parchment);
+}
+
+/* === PASSAGE DISPLAY PAPER FEEL === */
+.passage-display {
+    background:
+        linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(139, 100, 60, 0.03) 100%);
+    border-radius: 2px;
+    padding: 1rem;
+    border: 1px solid rgba(212, 196, 154, 0.4);
+}
+
+/* === CURSOR PULSE (enhanced from basic blink) === */
+@keyframes cursorPulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 3px rgba(184, 134, 11, 0.4); }
+    50% { opacity: 0.3; box-shadow: none; }
+}
+
+.passage-display .char.current::before {
+    animation: cursorPulse 0.9s ease-in-out infinite;
+}
+
+/* === PROGRESS BAR POLISH === */
+.progress-bar-fill {
+    background: linear-gradient(
+        90deg,
+        var(--accent-gold) 0%,
+        var(--accent-gold-soft) 50%,
+        var(--accent-gold) 100%
+    );
+    background-size: 200% 100%;
+    animation: progressShimmer 3s ease-in-out infinite;
+    box-shadow: 0 0 4px rgba(184, 134, 11, 0.3);
+}
+
+@keyframes progressShimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* === SCORE GLOW ANIMATION === */
+@keyframes scoreGlow {
+    0% { opacity: 0; transform: scale(0.7); text-shadow: none; }
+    50% { opacity: 1; transform: scale(1.08); text-shadow: 0 0 20px rgba(184, 134, 11, 0.5); }
+    100% { opacity: 1; transform: scale(1); text-shadow: 0 0 8px rgba(184, 134, 11, 0.25); }
+}
+
+.result-score.score-earned {
+    animation: scoreGlow 0.8s ease-out forwards;
+    animation-delay: 0.3s;
+    opacity: 0;
+}
+
+.result-score.score-not-earned {
+    animation: fadeIn 0.5s ease-out forwards;
+    animation-delay: 0.3s;
+    opacity: 0;
+}
+
+/* === PASSAGE EARNED MESSAGE PULSE === */
+@keyframes earnedPulse {
+    0% { opacity: 0; transform: scale(0.9); }
+    40% { opacity: 1; transform: scale(1.03); }
+    70% { transform: scale(0.98); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.passage-earned-msg.earned {
+    animation: earnedPulse 0.6s ease-out forwards;
+    animation-delay: 0.6s;
+    opacity: 0;
+}
+
+.passage-earned-msg.earned-era-complete {
+    animation: earnedPulse 0.6s ease-out forwards;
+    animation-delay: 0.6s;
+    opacity: 0;
+}
+
+/* === ERA COMPLETION STAMP === */
+.era-stamp-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(44, 24, 16, 0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(2px);
+}
+
+.era-stamp-overlay.visible {
+    display: flex;
+    animation: overlayFadeIn 0.3s ease-out;
+}
+
+@keyframes overlayFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.era-stamp {
+    text-align: center;
+    animation: stampDown 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes stampDown {
+    0% { opacity: 0; transform: scale(2.5) rotate(-8deg); }
+    60% { opacity: 1; transform: scale(0.95) rotate(1deg); }
+    80% { transform: scale(1.02) rotate(-0.5deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+.era-stamp-seal {
+    width: 160px;
+    height: 160px;
+    border: 4px double var(--accent-gold);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    background: rgba(244, 237, 211, 0.95);
+    box-shadow:
+        0 0 0 2px rgba(184, 134, 11, 0.3),
+        0 0 30px rgba(184, 134, 11, 0.2),
+        inset 0 0 20px rgba(184, 134, 11, 0.1);
+}
+
+.era-stamp-check {
+    font-size: 2.5rem;
+    color: var(--accent-gold);
+    line-height: 1;
+}
+
+.era-stamp-label {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.65rem;
+    color: var(--accent-gold);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-top: 0.25rem;
+}
+
+.era-stamp-era-name {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 1.6rem;
+    color: var(--parchment);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    max-width: 400px;
+}
+
+.era-stamp-subtitle {
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 1.1rem;
+    color: var(--parchment-edge);
+    font-style: italic;
+    margin-top: 0.5rem;
+}
+
+/* === MILESTONE CELEBRATION OVERLAY === */
+.milestone-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(44, 24, 16, 0.75);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(2px);
+}
+
+.milestone-overlay.visible {
+    display: flex;
+    animation: overlayFadeIn 0.3s ease-out;
+}
+
+.milestone-celebration {
+    text-align: center;
+    animation: milestoneReveal 0.7s ease-out forwards;
+}
+
+@keyframes milestoneReveal {
+    0% { opacity: 0; transform: translateY(30px) scale(0.9); }
+    60% { opacity: 1; transform: translateY(-5px) scale(1.02); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.milestone-icon-large {
+    font-size: 3.5rem;
+    line-height: 1;
+    margin-bottom: 0.75rem;
+    animation: milestoneIconGlow 1.5s ease-in-out infinite;
+}
+
+@keyframes milestoneIconGlow {
+    0%, 100% { text-shadow: 0 0 10px rgba(184, 134, 11, 0.3); }
+    50% { text-shadow: 0 0 25px rgba(184, 134, 11, 0.6), 0 0 50px rgba(184, 134, 11, 0.2); }
+}
+
+.milestone-celebration-name {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 2rem;
+    color: var(--parchment);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    margin-bottom: 0.5rem;
+}
+
+.milestone-celebration-desc {
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 1.15rem;
+    color: var(--parchment-edge);
+    font-style: italic;
+}
+
+/* === JOURNEY DOT PULSE (newly earned) === */
+@keyframes dotPulse {
+    0% { box-shadow: 0 0 0 0 rgba(45, 90, 30, 0.5); }
+    50% { box-shadow: 0 0 0 6px rgba(45, 90, 30, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(45, 90, 30, 0); }
+}
+
+.journey-dot.newly-earned {
+    animation: dotPulse 1s ease-out 3;
+}
+
+/* === OVERLAY FADE OUT === */
+@keyframes overlayFadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+.era-stamp-overlay.fading,
+.milestone-overlay.fading {
+    animation: overlayFadeOut 0.4s ease-in forwards;
+}
+
 
 /* === RESPONSIVE === */
 @media (max-width: 600px) {
