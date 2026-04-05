@@ -889,6 +889,59 @@ body {
     opacity: 0.5;
 }
 
+/* === SPECIAL CATEGORY DIVIDER (Home Screen) === */
+.special-category-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0.25rem 0 1.25rem;
+    padding: 0 2rem;
+}
+
+.special-divider-line {
+    flex: 1;
+    height: 1px;
+    background: var(--ink-faded);
+    opacity: 0.3;
+}
+
+.special-divider-label {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.7rem;
+    color: var(--ink-faded);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.special-category-list {
+    margin-bottom: 1.5rem;
+}
+
+/* === SPECIAL CATEGORY DIVIDER (Journey Page) === */
+.journey-special-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 2rem 0 1.5rem;
+}
+
+.journey-special-divider-line {
+    flex: 1;
+    height: 1px;
+    background: var(--ink-faded);
+    opacity: 0.3;
+}
+
+.journey-special-divider-label {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.75rem;
+    color: var(--ink-faded);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
 /* === SOUND CONTROLS === */
 .sound-controls {
     display: flex;

@@ -25,6 +25,18 @@ var CAMPAIGN_ERAS = [
     'The World at War Again'
 ];
 
+// Special practice categories
+var SPECIAL_CATEGORIES = [
+    'By the Numbers',
+    'Quick Study',
+    'Words of the Era',
+    'Deep Dive',
+    'Numbers & Symbols'
+];
+
+// All trackable categories
+var ALL_CATEGORIES = CAMPAIGN_ERAS.concat(SPECIAL_CATEGORIES);
+
 var selectedEra = 'all';
 var gameMode = loadGameMode(); // 'campaign' or 'freeplay'
 var typingMode = loadTypingMode(); // 'correction' or 'flow'
@@ -37,12 +49,12 @@ var typingMode = loadTypingMode(); // 'correction' or 'flow'
 var passagesByEra = {};
 (function() {
     for (var i = 0; i < passages.length; i++) {
-        for (var e = 0; e < CAMPAIGN_ERAS.length; e++) {
-            if (passages[i].era.indexOf(CAMPAIGN_ERAS[e]) !== -1) {
-                if (!passagesByEra[CAMPAIGN_ERAS[e]]) {
-                    passagesByEra[CAMPAIGN_ERAS[e]] = [];
+        for (var e = 0; e < ALL_CATEGORIES.length; e++) {
+            if (passages[i].era.indexOf(ALL_CATEGORIES[e]) !== -1) {
+                if (!passagesByEra[ALL_CATEGORIES[e]]) {
+                    passagesByEra[ALL_CATEGORIES[e]] = [];
                 }
-                passagesByEra[CAMPAIGN_ERAS[e]].push(i);
+                passagesByEra[ALL_CATEGORIES[e]].push(i);
                 break;
             }
         }
@@ -513,15 +525,30 @@ function updateEraProgress() {
             }
         }
     }
+    // Special categories
+    for (var s = 0; s < SPECIAL_CATEGORIES.length; s++) {
+        var catName = SPECIAL_CATEGORIES[s];
+        var catEarned = getEraCompletionCount(catName);
+        var catTotal = getEraTotalCount(catName);
+        var catEl = document.getElementById('eraProgress-s' + s);
+        if (catEl) {
+            if (gameMode === 'campaign') {
+                catEl.textContent = catEarned + ' / ' + catTotal;
+                catEl.style.display = '';
+            } else {
+                catEl.style.display = 'none';
+            }
+        }
+    }
     // Also update All Eras
     var allEl = document.getElementById('eraProgress-all');
     if (allEl) {
         if (gameMode === 'campaign') {
             var totalEarned = 0;
             var totalAll = 0;
-            for (var f = 0; f < CAMPAIGN_ERAS.length; f++) {
-                totalEarned += getEraCompletionCount(CAMPAIGN_ERAS[f]);
-                totalAll += getEraTotalCount(CAMPAIGN_ERAS[f]);
+            for (var f = 0; f < ALL_CATEGORIES.length; f++) {
+                totalEarned += getEraCompletionCount(ALL_CATEGORIES[f]);
+                totalAll += getEraTotalCount(ALL_CATEGORIES[f]);
             }
             allEl.textContent = totalEarned + ' / ' + totalAll;
             allEl.style.display = '';
@@ -877,11 +904,11 @@ function completePassage() {
     var score = calculateScore(wpm, accuracy);
     var earned = accuracy >= ACCURACY_THRESHOLD;
 
-    // Determine which campaign era this passage belongs to
+    // Determine which category this passage belongs to
     var passageEraName = null;
-    for (var e = 0; e < CAMPAIGN_ERAS.length; e++) {
-        if (passage.era.indexOf(CAMPAIGN_ERAS[e]) !== -1) {
-            passageEraName = CAMPAIGN_ERAS[e];
+    for (var e = 0; e < ALL_CATEGORIES.length; e++) {
+        if (passage.era.indexOf(ALL_CATEGORIES[e]) !== -1) {
+            passageEraName = ALL_CATEGORIES[e];
             break;
         }
     }
@@ -1078,8 +1105,8 @@ function renderStats() {
 
     // Era completion summary
     var eraHtml = '';
-    for (var n = 0; n < CAMPAIGN_ERAS.length; n++) {
-        var eraName = CAMPAIGN_ERAS[n];
+    for (var n = 0; n < ALL_CATEGORIES.length; n++) {
+        var eraName = ALL_CATEGORIES[n];
         var eraEarned = getEraCompletionCount(eraName);
         var eraTotal = getEraTotalCount(eraName);
         var pct = eraTotal > 0 ? Math.round((eraEarned / eraTotal) * 100) : 0;
@@ -1152,8 +1179,8 @@ var MILESTONES = [
 
 (function setMilestoneThresholds() {
     var totalCampaign = 0;
-    for (var e = 0; e < CAMPAIGN_ERAS.length; e++) {
-        totalCampaign += getEraTotalCount(CAMPAIGN_ERAS[e]);
+    for (var e = 0; e < ALL_CATEGORIES.length; e++) {
+        totalCampaign += getEraTotalCount(ALL_CATEGORIES[e]);
     }
     for (var m = 0; m < MILESTONES.length; m++) {
         if (MILESTONES[m].id === 'half') MILESTONES[m].threshold = Math.ceil(totalCampaign / 2);
@@ -1163,8 +1190,8 @@ var MILESTONES = [
 
 function getTotalEarned() {
     var total = 0;
-    for (var e = 0; e < CAMPAIGN_ERAS.length; e++) {
-        total += getEraCompletionCount(CAMPAIGN_ERAS[e]);
+    for (var e = 0; e < ALL_CATEGORIES.length; e++) {
+        total += getEraCompletionCount(ALL_CATEGORIES[e]);
     }
     return total;
 }
@@ -1182,19 +1209,18 @@ function renderJourney() {
     var timelineEl = document.getElementById('journeyTimeline');
     var html = '';
 
+    // Campaign eras
     for (var e = 0; e < CAMPAIGN_ERAS.length; e++) {
         var eraName = CAMPAIGN_ERAS[e];
         var eraIndices = passagesByEra[eraName] || [];
         var earned = progress[eraName] || [];
         var eraComplete = earned.length >= eraIndices.length && eraIndices.length > 0;
-
-        // Era year ranges
-        var yearRanges = ['1900\u20131913', '1914\u20131918', '1919\u20131929', '1929\u20131939', '1939\u20131945'];
+        var yearRange = ERA_YEAR_MAP[eraName] || '';
 
         html += '<div class="journey-era">';
         html += '<div class="journey-era-header">';
         html += '<span class="journey-era-name">' + eraName + '</span>';
-        html += '<span class="journey-era-years">' + yearRanges[e] + '</span>';
+        html += '<span class="journey-era-years">' + yearRange + '</span>';
         html += '<span class="journey-era-line"></span>';
         html += '<span class="journey-era-status ' + (eraComplete ? 'era-done' : '') + '">';
         html += eraComplete ? '\u2713 Complete' : earned.length + ' / ' + eraIndices.length;
@@ -1217,6 +1243,46 @@ function renderJourney() {
         html += '</div>';
     }
 
+    // Special categories section
+    html += '<div class="journey-special-divider">';
+    html += '<span class="journey-special-divider-line"></span>';
+    html += '<span class="journey-special-divider-label">Practice Categories</span>';
+    html += '<span class="journey-special-divider-line"></span>';
+    html += '</div>';
+
+    for (var s = 0; s < SPECIAL_CATEGORIES.length; s++) {
+        var catName = SPECIAL_CATEGORIES[s];
+        var catIndices = passagesByEra[catName] || [];
+        var catProgress = progress[catName] || [];
+        var catComplete = catProgress.length >= catIndices.length && catIndices.length > 0;
+        var catYears = ERA_YEAR_MAP[catName] || '';
+
+        html += '<div class="journey-era journey-special-era">';
+        html += '<div class="journey-era-header">';
+        html += '<span class="journey-era-name">' + catName + '</span>';
+        html += '<span class="journey-era-years">' + catYears + '</span>';
+        html += '<span class="journey-era-line"></span>';
+        html += '<span class="journey-era-status ' + (catComplete ? 'era-done' : '') + '">';
+        html += catComplete ? '\u2713 Complete' : catProgress.length + ' / ' + catIndices.length;
+        html += '</span>';
+        html += '</div>';
+
+        html += '<div class="journey-passages">';
+        for (var q = 0; q < catIndices.length; q++) {
+            var catPassage = passages[catIndices[q]];
+            var catIsEarned = catProgress.indexOf(catPassage.title) !== -1;
+            var catIsNew = newlyEarnedPassages.indexOf(catPassage.title) !== -1;
+            html += '<div class="journey-dot ' + (catIsEarned ? 'earned' : '') + (catIsNew ? ' newly-earned' : '') + '">';
+            html += '<span class="dot-tooltip">' + catPassage.title + '</span>';
+            if (!catIsEarned) {
+                html += (q + 1);
+            }
+            html += '</div>';
+        }
+        html += '</div>';
+        html += '</div>';
+    }
+
     timelineEl.innerHTML = html;
 
     // Milestones
@@ -1224,9 +1290,9 @@ function renderJourney() {
     var mHtml = '<h3 class="journey-milestones-title">Milestones</h3>';
     mHtml += '<div class="journey-milestone-list">';
 
-    // Add era completion milestones
-    for (var f = 0; f < CAMPAIGN_ERAS.length; f++) {
-        var eName = CAMPAIGN_ERAS[f];
+    // Add era/category completion milestones
+    for (var f = 0; f < ALL_CATEGORIES.length; f++) {
+        var eName = ALL_CATEGORIES[f];
         var eIndices = passagesByEra[eName] || [];
         var eEarned = progress[eName] || [];
         var done = eEarned.length >= eIndices.length && eIndices.length > 0;
@@ -1261,7 +1327,12 @@ var ERA_YEAR_MAP = {
     'The Great War': '1914\u20131918',
     'The Roaring Twenties': '1919\u20131929',
     'The Great Depression': '1929\u20131939',
-    'The World at War Again': '1939\u20131945'
+    'The World at War Again': '1939\u20131945',
+    'By the Numbers': '1900\u20131945',
+    'Quick Study': '1900\u20131945',
+    'Words of the Era': '1900\u20131945',
+    'Deep Dive': '1900\u20131945',
+    'Numbers & Symbols': '1900\u20131945'
 };
 
 var pendingCelebrations = []; // queue of celebrations to show

@@ -663,6 +663,124 @@ const passages = [
         title: "The TVA: Remaking a Region",
         text: "In May 1933, Congress created the Tennessee Valley Authority to develop the impoverished Tennessee River valley. The TVA built 16 dams, generated cheap hydroelectric power, controlled devastating floods, improved navigation, and introduced modern agricultural techniques to some of the poorest communities in America. Before the TVA, only 2% of farms in the region had electricity. Within a decade, most did. The TVA employed 28,000 workers at its peak and brought an entire region into the twentieth century. It also displaced 15,000 families whose homes were flooded by the reservoirs. For those families, the progress of the many came at the expense of the few \u2014 a tension that runs through every story of modernization. Critics called it socialism; supporters called it salvation. It was both, and neither, and something uniquely American.",
         footnote: "The TVA still operates today, providing electricity to 10,000,000 people across seven states. It is one of the few New Deal agencies that survived intact and continues to function essentially as originally designed."
+    },
+
+    // ===================================================================
+    // NUMBERS & SYMBOLS — Special character training passages
+    // ===================================================================
+    {
+        era: "Numbers & Symbols \u00b7 1900\u20131945",
+        title: "Patent Numbers: Inventing the Century",
+        text: "Patent #821,393: the Wright Flyer (1906). Patent #1,049,667: Henry Ford's transmission (1912). Patent #1,781,541: the iron lung (1930). Patent #2,026,082: FM radio (1935). Patent #2,230,654: the cyclotron (1940). Patent #2,524,035: the transistor (1950; filed 1948). Each number represents years of labor; each filing fee ($15\u2013$40) was a gamble on the future.",
+        footnote: "The Wright brothers' patent was so broad it covered any method of controlling an aircraft in flight. They spent years suing competitors and were widely criticized for slowing the development of American aviation."
+    },
+    {
+        era: "Numbers & Symbols \u00b7 1900\u20131945",
+        title: "The Periodic Table: 1900\u20131945",
+        text: "Elements discovered (1900\u20131945): radon (Rn, #86; 1900), europium (Eu, #63; 1901), lutetium (Lu, #71; 1907), protactinium (Pa, #91; 1913), hafnium (Hf, #72; 1923), rhenium (Re, #75; 1925), technetium (Tc, #43; 1937), francium (Fr, #87; 1939), astatine (At, #85; 1940), neptunium (Np, #93; 1940), plutonium (Pu, #94; 1940\u201341), and curium (Cm, #96; 1944). Atomic weights: Pu = 244.06; Np = 237.05; U-235 = 235.04.",
+        footnote: "Technetium (Tc, #43) was the first element produced artificially. Its name comes from the Greek 'technetos,' meaning artificial. Despite being synthetic, trace amounts were later found in certain stars."
+    },
+    {
+        era: "Numbers & Symbols \u00b7 1900\u20131945",
+        title: "Stock Ticker: Black Tuesday",
+        text: "Oct. 29, 1929 \u2014 selected closing prices (change from Oct. 28): AT&T: $232 (-$28); General Electric: $222 (-$48); U.S. Steel: $174 (-$18); Westinghouse: $126 (-$34); Woolworth: $52 (-$8). Volume: 16,410,030 shares. Dow Jones Industrial Average: 260.64 (down -11.73%). Ticker tape delay: 2 hrs., 30 min. Margin calls issued: ~$150,000,000+. Total market value lost (Oct. 24\u201329): ~$30,000,000,000.",
+        footnote: "The ticker tape machines that reported prices ran so far behind that traders had no idea what their holdings were worth. Many sold in blind panic, which only accelerated the collapse."
+    },
+    {
+        era: "Numbers & Symbols \u00b7 1900\u20131945",
+        title: "Morse Code & the Titanic",
+        text: "April 14\u201315, 1912 \u2014 key wireless transmissions (times in ship's time): 11:40 p.m.: \"CQD CQD SOS SOS CQD DE MGY\" (Titanic's call sign = MGY). 11:45 p.m.: \"We have struck iceberg; sinking fast; come to our assistance. Position: Lat. 41\u00b046'N, Long. 50\u00b014'W.\" 12:15 a.m.: \"Engine room getting flooded.\" 12:27 a.m.: \"SOS SOS CQD CQD MGY. We are sinking fast. Passengers being put into boats.\" 2:17 a.m.: last signal received \u2014 barely readable. 2:20 a.m.: silence.",
+        footnote: "The Titanic disaster led directly to the Radio Act of 1912, which required ships to maintain 24-hour radio watches. The nearby ship Californian had turned off its wireless for the night and never received the distress calls."
+    },
+    {
+        era: "Numbers & Symbols \u00b7 1900\u20131945",
+        title: "Rationing Math: Points & Prices",
+        text: "Weekly WWII ration allowances per person (1943): sugar: 8 oz. (12 pts.); coffee: 1 lb./5 wks.; butter: 4 oz. (8 pts.); meat: 28 oz. (16 pts.); canned goods: 48 pts./month. Prices (ceiling): bread: $0.09/loaf; milk: $0.62/gal.; eggs: $0.58/doz.; steak: $0.41/lb.; gasoline: $0.15/gal. (Class \"A\" card = 3\u20134 gal./wk.). Violations: penalties of $10,000 and/or 1 year in prison. Black market premium: +40\u201360% above ceiling.",
+        footnote: "Ration books contained small stamps worth specific point values. Families had to carefully budget their points across the month. Many Americans planted 'Victory Gardens' to supplement their rations\u2014by 1944, these gardens produced 40% of all vegetables consumed in the country."
+    },
+    {
+        era: "Numbers & Symbols \u00b7 1900\u20131945",
+        title: "The Empire State: A Building in Numbers",
+        text: "Height: 1,454 ft. (w/ antenna); 1,250 ft. (roof). Floors: 102. Steel: 60,000 tons. Concrete: 62,000 cu. yds. Bricks: 10,000,000. Windows: 6,514. Elevators: 73 (speed: 1,200 ft./min.). Cost: $40,948,900 ($24,718,000 for construction + $16,230,900 for land). Workers: 3,439 daily (peak). Construction time: 410 days (03/17/1930\u201304/11/1931). Rivets: 2,500,000. Weight: 365,000 tons. Office space: 2,158,000 sq. ft.",
+        footnote: "The building was completed ahead of schedule and under budget\u2014a rarity in construction. During the Depression, it was nicknamed the 'Empty State Building' because so much of its office space went unrented."
+    },
+    {
+        era: "Numbers & Symbols \u00b7 1900\u20131945",
+        title: "Election Night: FDR's Four Wins",
+        text: "1932: Roosevelt 22,821,277 (57.4%) vs. Hoover 15,761,254 (39.7%); Electoral: 472\u201359. 1936: Roosevelt 27,747,636 (60.8%) vs. Landon 16,679,543 (36.5%); Electoral: 523\u20138. 1940: Roosevelt 27,313,945 (54.7%) vs. Willkie 22,347,744 (44.8%); Electoral: 449\u201382. 1944: Roosevelt 25,612,916 (53.4%) vs. Dewey 22,017,929 (45.9%); Electoral: 432\u201399. Total popular votes cast for FDR: 103,495,774.",
+        footnote: "The 1936 landslide was the largest Electoral College margin since 1820. Alf Landon carried only Maine and Vermont, inspiring the quip: 'As Maine goes, so goes Vermont.' FDR's four consecutive victories led directly to the 22nd Amendment (1951), limiting presidents to two terms."
+    },
+    {
+        era: "Numbers & Symbols \u00b7 1900\u20131945",
+        title: "The Federal Budget (1900\u20131945)",
+        text: "Federal spending by year: 1900: $520,861,000 (2.7% of GDP); 1910: $693,744,000 (2.3%); 1917: $1,977,682,000 (3.4%); 1918: $12,697,839,000 (17.1%); 1919: $18,492,665,000 (24.2%); 1929: $3,127,199,000 (3.0%); 1933: $4,598,496,000 (8.0%); 1940: $9,468,000,000 (9.8%); 1943: $78,555,000,000 (43.6%); 1945: $92,712,000,000 (41.9%). Revenue sources (1940): income tax = 44%; excise tax = 33%; customs = 6%; other = 17%.",
+        footnote: "The explosion in wartime spending permanently changed Americans' relationship with the federal government. The income tax, introduced via the 16th Amendment in 1913, initially applied only to the wealthy. By 1945, most working Americans paid it."
+    },
+    {
+        era: "Numbers & Symbols \u00b7 1900\u20131945",
+        title: "Baseball Box Score: 1927 Yankees",
+        text: "1927 New York Yankees (final record: 110\u201344, .714): Batting leaders \u2014 Ruth: .356 BA, 60 HR, 164 RBI, .772 SLG; Gehrig: .373 BA, 47 HR, 175 RBI, .765 SLG; Meusel: .337 BA, 8 HR, 103 RBI; Lazzeri: .309 BA, 18 HR, 102 RBI. Pitching \u2014 Hoyt: 22\u20137 (W\u2013L), 2.63 ERA; Moore: 19\u20137, 2.28 ERA; Pennock: 19\u20138, 3.00 ERA. World Series: Yankees 4, Pirates 0. Total attendance (regular season): 1,164,015.",
+        footnote: "The 1927 Yankees are often called the greatest baseball team ever assembled. Their lineup was nicknamed 'Murderers' Row.' Ruth's 60 home runs stood as the single-season record for 34 years."
+    },
+    {
+        era: "Numbers & Symbols \u00b7 1900\u20131945",
+        title: "Currency Exchange: A World at War",
+        text: "Exchange rates vs. USD (approximate, 1939\u20131945): British pound (\u00a3) = $4.03 (fixed 1940); French franc (FFr) = $0.0254 (1939), devalued to ~$0.02 (Vichy); German Reichsmark (RM) = $0.4020 (official), ~$0.10 (black market, 1944); Japanese yen (\u00a5) = $0.2389 (1939), collapsed by 1945; Soviet ruble (R) = $0.1905 (official). Occupation currency: Allied Military marks = $0.10/mark (face value); actual purchasing power: ~$0.01\u2013$0.03.",
+        footnote: "After the war, the Bretton Woods Agreement (1944) pegged most world currencies to the U.S. dollar at $35/oz. of gold. This system lasted until 1971, when Nixon ended dollar-gold convertibility."
+    },
+    {
+        era: "Numbers & Symbols \u00b7 1900\u20131945",
+        title: "Longitude & Latitude: Battles of WWII",
+        text: "Pearl Harbor: 21\u00b021'N, 157\u00b057'W (12/07/1941). Midway: 28\u00b012'N, 177\u00b022'W (06/04\u201307/1942). Stalingrad: 48\u00b042'N, 44\u00b031'E (08/1942\u201302/1943). El Alamein: 30\u00b050'N, 28\u00b057'E (10/23\u201311/11/1942). Normandy (Omaha Beach): 49\u00b022'N, 0\u00b053'W (06/06/1944). Iwo Jima: 24\u00b047'N, 141\u00b019'E (02/19\u201303/26/1945). Hiroshima: 34\u00b024'N, 132\u00b027'E (08/06/1945). Nagasaki: 32\u00b046'N, 129\u00b052'E (08/09/1945).",
+        footnote: "Military planners used these coordinates to calculate everything from bombing runs to supply routes. The precise coordinates of Omaha Beach were among the most closely guarded secrets of the war."
+    },
+    {
+        era: "Numbers & Symbols \u00b7 1900\u20131945",
+        title: "The Manhattan Project: Costs & Codes",
+        text: "Total cost: $2,200,000,000 ($1945). Code names: S-1 (overall project); \"Little Boy\" (uranium bomb/Hiroshima); \"Fat Man\" (plutonium bomb/Nagasaki); \"Trinity\" (first test; 07/16/1945). Sites: Oak Ridge, TN (cost: $1,188,352,000; peak workers: 82,000); Hanford, WA ($390,124,000; 50,000 workers); Los Alamos, NM ($74,055,000; 6,000 workers). Enrichment: U-235 content in natural uranium = 0.72%; weapons-grade = 80%+ (\"Little Boy\" used ~64 kg @ 80%). Yield: \"Trinity\" = 21 kt; \"Little Boy\" = 15 kt; \"Fat Man\" = 21 kt.",
+        footnote: "The project was so secret that Vice President Truman did not learn of its existence until after FDR's death on April 12, 1945. He had to make the decision to use the bomb just four months later."
+    },
+    {
+        era: "Numbers & Symbols \u00b7 1900\u20131945",
+        title: "Prohibition: Dry Laws in Wet Numbers",
+        text: "18th Amendment (ratified: 01/16/1919; effective: 01/17/1920). Enforcement budget (1920): $6,350,000; (1930): $13,400,000. Agents employed: ~2,300 (for 18,700+ miles of coastline & borders). Arrests (1920\u20131933): ~577,000+. Convictions: ~461,000. Speakeasies in NYC alone (est. 1925): 30,000\u2013100,000 (vs. ~15,000 legal bars pre-Prohibition). Federal alcohol permits issued (for \"medicinal\" whiskey): 64,405/yr. by 1928. Repeal: 21st Amendment (ratified: 12/05/1933). Duration: 13 yrs., 10 mos., 19 days.",
+        footnote: "Doctors wrote an estimated 11,000,000 prescriptions for 'medicinal' whiskey per year during Prohibition. The Walgreens pharmacy chain grew from 20 stores to over 500 during the Prohibition era\u2014a correlation the company has always insisted was coincidental."
+    },
+    {
+        era: "Numbers & Symbols \u00b7 1900\u20131945",
+        title: "War Bonds: Series E Specifications",
+        text: "Series E War Bond terms: denomination = $25, $50, $75, $100, $200, $500, $1,000, $5,000, or $10,000 (maturity value). Purchase price: 75% of face value ($18.75 for a $25 bond). Maturity: 10 years. Interest rate: 2.9% (compounded semi-annually). Max purchase: $5,000 (maturity value)/calendar yr. per person. Total sold (1941\u20131945): $185,700,000,000 in 8 bond drives. Purchasers: ~85,000,000 Americans (>1/2 the population). Slogan: \"Buy War Bonds!\"",
+        footnote: "The bond drives were massive propaganda campaigns. Hollywood stars sold bonds at rallies; one event with Hedy Lamarr reportedly raised $25,000,000 in a single evening. The bonds also served as a tool to reduce consumer spending and control wartime inflation."
+    },
+    {
+        era: "Numbers & Symbols \u00b7 1900\u20131945",
+        title: "The Census: Counting America",
+        text: "1900 Census: pop. = 76,212,168 (+21.0% from 1890); urban: 39.6%; foreign-born: 13.6%; median age: 22.9 yrs. 1910: pop. = 92,228,496 (+21.0%); urban: 45.6%. 1920: pop. = 106,021,537 (+15.0%); urban: 51.2% (first time >50%). 1930: pop. = 122,775,046 (+15.8%); urban: 56.1%. 1940: pop. = 132,164,569 (+7.6%); urban: 56.5%; median income: $2,019/yr.; avg. household: 3.67 persons; homeownership: 43.6%; no plumbing: 30.3%.",
+        footnote: "The 1940 Census was the first to ask about income. The question was controversial\u2014many Americans considered their earnings a deeply private matter. The data, however, proved invaluable for understanding the economic impact of the Depression."
+    },
+    {
+        era: "Numbers & Symbols \u00b7 1900\u20131945",
+        title: "Telegram Rates & Routing Codes",
+        text: "Western Union rates (1920): first 10 words = $0.60 (up to 1,000 mi.) / $1.00 (over 1,000 mi.); each add'l word = $0.04\u2013$0.06. Night letters (50 words): $0.50\u2013$0.80. Cable rates (transatlantic): $0.25/word (ordinary) / $0.50/word (urgent). Routing codes: NY = New York; CH = Chicago; SF = San Francisco; WA = Washington; LD = London. Common abbreviations: \"STOP\" (= period); \"PARA\" (= new paragraph); \"RPT\" (= repeat/verify). Annual messages sent (1929): ~200,000,000.",
+        footnote: "Telegrams charged by the word, which gave rise to a famously compressed style of English. The instruction 'STOP' was used instead of a period because punctuation marks could be confused with Morse code. This economic pressure on language created its own literary form."
+    },
+    {
+        era: "Numbers & Symbols \u00b7 1900\u20131945",
+        title: "Scientific Notation: Physics Breakthroughs",
+        text: "Key constants & measurements (1900\u20131945): speed of light (c) = 2.998 x 10^8 m/s; Planck's constant (h) = 6.626 x 10^-34 J\u00b7s (1900); electron charge (e) = 1.602 x 10^-19 C (Millikan, 1913); E = mc^2 (Einstein, 1905); Hubble's constant (1929) = ~500 km/s/Mpc (revised to ~70); neutron mass = 1.675 x 10^-27 kg (Chadwick, 1932). Uranium fission energy: ~200 MeV/atom = 3.2 x 10^-11 J (Hahn & Strassmann, 1938).",
+        footnote: "Einstein's famous equation E = mc^2 showed that a tiny amount of mass contains enormous energy. One kilogram of matter, fully converted, would release approximately 9 x 10^16 joules\u2014equivalent to about 21 megatons of TNT."
+    },
+    {
+        era: "Numbers & Symbols \u00b7 1900\u20131945",
+        title: "Insurance Ledger: The Triangle Fire",
+        text: "Triangle Shirtwaist Factory fire (03/25/1911): killed = 146 workers (123 women + 23 men). Ages: youngest = 14 yrs. old. Building: 10 floors @ 23\u201329 Washington Pl., NYC. Fire dept. ladders reached: 6th floor (max). Time of fire: ~4:40\u20135:15 p.m. (~35 min.). Exit doors: locked (to prevent theft). Settlement per victim's family: $75.00. Insurance payout to owners (Blanck & Harris): $60,000+ ($400/victim in excess of losses). Criminal trial verdict: not guilty.",
+        footnote: "The outrage over the Triangle fire and its aftermath\u2014especially the paltry settlements and the owners' acquittal\u2014galvanized the labor movement and led to 36 new laws reforming workplace safety in New York State."
+    },
+    {
+        era: "Numbers & Symbols \u00b7 1900\u20131945",
+        title: "Lend-Lease: The Arsenal Ledger",
+        text: "Lend-Lease shipments (1941\u20131945) to allies: total value = $50,100,000,000. UK: $31,400,000,000 (62.7%); USSR: $11,300,000,000 (22.6%); France: $3,200,000,000 (6.4%); China: $1,600,000,000 (3.2%); others: $2,600,000,000 (5.1%). Goods shipped to USSR: 400,000 trucks (Studebaker US6); 14,795 aircraft; 7,056 tanks; 1,981 locomotives; 11,155 railcars; 4,478,116 tons of food; 2,670,371 tons of petroleum products. \"Reverse Lend-Lease\" received by U.S.: $7,800,000,000.",
+        footnote: "Churchill called Lend-Lease 'the most unsordid act in the history of any nation.' Stalin was less gracious publicly but privately acknowledged that without American trucks and food, the Soviet war effort would have collapsed."
     }
 
 ];
